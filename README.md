@@ -5,8 +5,8 @@
     Requires at least: 2.8
     Tested up to     : 4.0.1
     Stable tag       : 1.1.1
-		License          : GPLv2 or later
-		License URI      : http://www.gnu.org/licenses/gpl-2.0.html
+    License          : GPLv2 or later
+    License URI      : http://www.gnu.org/licenses/gpl-2.0.html
 
 Sell Amazon products in the sidebar, based upon the POST or a default pool of products that you define.
 
