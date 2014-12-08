@@ -55,7 +55,7 @@ Yes.  Absolutely.  Each instance can be configured separately.  Give the widgets
 ###Upgrade Notice
 
 ####1.1.2
-* WP 4.x compatible.
+* Upgraded to jQuery and made WordPress 4.x compatible.
 
 ####1.1.1
 * Fixed problem with wrapping of form labels on the Settings page.

@@ -1,10 +1,10 @@
 ###Changelog
 
 ####1.1.2
-* Admin tool JavaScript upgrade to make use of jQuery.
+* Updated JavaScript in admin tool to make use of jQuery.
 * Fixed issue with ASIN assignment for existing POSTS in Admin screen.
 * Plugin is now WP 4.x compatible.
-* Release date (?)
+* Release date (12/8/2014)
 
 ####1.1.1
 * Fixed problem with wrapping of form labels on the Settings page.  
