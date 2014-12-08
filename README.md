@@ -10,13 +10,13 @@ Randomly display one or more Amazon products in the sidebar; products are select
 
 ###Description
 
-The Amazon Book Store (formerly 'Support Great Writers') Widget provides a very simple way to display up to two products in a sidebar widget on your blog, magazine, or other Wordpress-powered website.  The widget can be instantiated multiple times, with different products being displayed in each instance, enabling you to quickly add several products for sale to your site.
+The Amazon Book Store (formerly 'Support Great Writers') Widget provides a very simple way to sell Amazon products via a sidebar widget on your blog, magazine, or other WordPress-powered website.  The widget can be instantiated multiple times, with different products being displayed in each instance.  
 
-As of version 1.1.0, the you can define a 'pool' of products from which the widget will randomly pick up to two (per widget) for display.  You can also define a unique pool of products for use with an individual POST, allowing you to quickly build up an Amazon Book Store of products that are related to your POSTs.  
+You can sell specific products on specific pages of your website, or define a 'pool' of products from which the widget will randomly chose from.  This allows you to quickly build up an Amazon store of products that are related to your individual POSTs.  
 
 ###About Us
 
-Developed by the fine folks at [Loudlever, Inc.](http://www.loudlever.com), this plugin allows blog owners and Wordpress publishers to monetize their content through Amazon affiliate sales.  We believe that it should be as easy as possible for site owners to use our tools, so if you experience any difficulties getting things set up please email us at: wordpress@loudlever.com. 
+Developed by the fine folks at [Loudlever, Inc.](http://www.loudlever.com), this plugin allows blog owners and WordPress publishers to monetize their content through [Amazon affiliate sales](http://associates.amazon.com).  We believe that it should be as easy for site owners to use our tools, so if you experience any difficulties getting things set up please email us at: wordpress@loudlever.com. 
 
 ###Installation
 
@@ -27,14 +27,14 @@ Install the plugin, then activate it.  Once activated, configure the Widget:
 * First, drag the 'Amazon Book Store' widget to your sidebar. 
 * Where prompted, set the "Title" you want displayed above the widget
 * Input your Amazon "Affiliate ID" and the Country representing the affiliate program you belong to.  (Default is 'United States')
-* Select how many product images you want displayed in the widget, 1 or 2.
+* Select how many products you want to offer for sale at one time within the widget, 1 or 2.
 
 **Configure the ASIN pool**
 
-Now navigate to 'Settings' -> 'Amazon Book Store' and add the ASINs for the products you want to be displayed in the widget.  There are two categorizations of settings:
+Navigate to 'Settings' -> 'Amazon Book Store' and add the ASINs for the products you want to be displayed in the widget.  See [What are ASINs](http://www.amazon.com/gp/seller/asin-upc-isbn-info.html) for more information.  There are two categorizations of settings:
 
-* POST Specific:  If set, these products will be displayed when users are reading the designated POST.
-* Default: If the request is to a POST that does not have specific ASINs defined, then the widget will display products from this group.
+* POST Specific:  When set, these products will be offered for sale when users read the associated POST.
+* Default: If the request is to a POST that does not have specific ASINs defined, the widget will display products from this group.
 
 **Wow - that was easy!**
 
@@ -42,8 +42,8 @@ Yes -- it's that easy.
 
 ###Frequently Asked Questions
 
-= Can I Use This Widget More Than Once In My Sidebar? =
-Yes.  Absolutely.  Each instance can be configured separately.  Give them separate titles - even separate Affiliate IDs.  You **must** use the same Affiliate 'country' for each widget instance, however.
+**Can I Use This Widget More Than Once In My Sidebar?**
+Yes.  Absolutely.  Each instance can be configured separately.  Give the widgets separate titles - even separate Affiliate IDs.  You **must** use the same Affiliate 'country' for each widget instance, however.
 
 ###Screenshots
 
