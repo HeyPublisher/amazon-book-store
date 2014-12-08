@@ -3,6 +3,7 @@
 ####1.1.2
 * Admin tool JavaScript upgrade to make use of jQuery.
 * Fixed issue with ASIN assignment for existing POSTS in Admin screen.
+* Plugin is now WP 4.x compatible.
 * Release date (?)
 
 ####1.1.1
