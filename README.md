@@ -5,8 +5,10 @@
     Requires at least: 2.8
     Tested up to     : 4.0.1
     Stable tag       : 1.1.1
+		License          : GPLv2 or later
+		License URI      : http://www.gnu.org/licenses/gpl-2.0.html
 
-Randomly display one or more Amazon products in the sidebar; products are selected from POST-specific pools, or from a 'default' pool that you define.
+Sell Amazon products in the sidebar, based upon the POST or a default pool of products that you define.
 
 ###Description
 
