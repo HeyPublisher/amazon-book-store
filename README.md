@@ -1,10 +1,10 @@
 ##Amazon Book Store
-    Contributors: Loudlever, Inc.
-    Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Y8SL68GN5J2PL
-    Tags: affiliate sales, Amazon, ASIN, Amazon Associate, monetize
+    Contributors     : Loudlever, Inc.
+    Donate link      : https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Y8SL68GN5J2PL
+    Tags             : affiliate sales, Amazon, ASIN, Amazon Associate, monetize
     Requires at least: 2.8
-    Tested up to: 4.0.1
-    Stable tag: 1.1.1
+    Tested up to     : 4.0.1
+    Stable tag       : 1.1.1
 
 Randomly display one or more Amazon products in the sidebar; products are selected from POST-specific pools, or from a 'default' pool that you define.
 
