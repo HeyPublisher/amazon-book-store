@@ -1,5 +1,10 @@
 === Changelog
 
+==== 1.1.2
+* Admin tool JavaScript upgrade to make use of jQuery.
+* Fixed issue with ASIN assignment for existing POSTS in Admin screen.
+* Release date (?)
+
 ==== 1.1.1
 * Fixed problem with wrapping of form labels on the Settings page.  
 * Extra long POST titles are now truncated to 40 characters for display purposes.
@@ -15,7 +20,7 @@
 
 ==== 1.0.1
 * Updated screenshots to highlight the fact that users should change their Amazon Associate ID.
-* Plugin is now owned and maintained by [Loudlever, Inc.](http://www.loudlever.com)
+* Plugin is now owned and maintained by [Loudlever, Inc.]{http://www.loudlever.com}
 * Update Release (03/26/2010)
 
 ==== 1.0
