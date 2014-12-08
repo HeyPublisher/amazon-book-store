@@ -1,5 +1,5 @@
 ##Amazon Book Store
-    Contributors     : Loudlever, Inc.
+    Contributors     : Richard Luck
     Donate link      : https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Y8SL68GN5J2PL
     Tags             : affiliate sales, Amazon, ASIN, Amazon Associate, monetize
     Requires at least: 2.8
@@ -18,7 +18,7 @@ You can sell specific products on specific pages of your website, or define a 'p
 
 ###About Us
 
-Developed by the fine folks at [Loudlever, Inc.](http://www.loudlever.com), this plugin allows blog owners and WordPress publishers to monetize their content through [Amazon affiliate sales](http://associates.amazon.com).  We believe that it should be as easy for site owners to use our tools, so if you experience any difficulties getting things set up please email us at: wordpress@loudlever.com. 
+This plugin allows blog owners and WordPress publishers to monetize their content through [Amazon affiliate sales](http://associates.amazon.com).  We believe that it should be as easy for site owners to use our tools, so if you experience any difficulties getting things set up please email us at: wordpress@loudlever.com. 
 
 ###Installation
 
