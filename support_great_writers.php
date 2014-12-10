@@ -47,7 +47,8 @@ define('SGW_DEFAULT_IMAGE', get_option('siteurl').'/wp-content/plugins/support-g
 define('SGW_POST_META_KEY','SGW_ASIN');
 define('SGW_ADMIN_PAGE','amazon_bookstore_options');
 define('SGW_ADMIN_PAGE_NONCE','sgw-save-options');
-define('SGW_PLUGIN_ERROR_CONTACT','Please contact <a href="mailto:wordpress@loudlever.com?subject=plugin%20error">wordpress@loudlever.com</a> if you have any questions');
+define('SGW_PLUGIN_ERROR_CONTACT','Please contact <a href="mailto:wordpress@loudlever.com?subject=Amazon%20Bookstore%20Widget">wordpress@loudlever.com</a> if you have any questions');
+define('SGW_BESTSELLERS','0812974492,0316055441');
 // define('SGW_FEEDBACK_EMAIL_VALUE','wordpress@loudlever.com?subject=SGW%20Wordpress%20Plugin');
 // define('SGW_SVC_URL_STYLE_GUIDE','http://www.loudlever.com/docs/plugins/wordpress/style_guide');     # designates the URL of the style guide
 
@@ -67,17 +68,19 @@ function AdminHeader() {
 <?php  
 }
 function AdminPage() {
-  // wp_enqueue_script( 'postbox' );
-  // wp_enqueue_script( 'jquery-ui-sortable' );
   require_once('admin/admin.php');
 }
 function AdminInit() {
   wp_enqueue_script('sgw', WP_PLUGIN_URL . '/support-great-writers/js/sgw.js'); 
 }
+function RegisterWidgetStyle() {
+	wp_enqueue_style( 'sgw_widget', SGW_BASE_URL . 'css/sgw_widget.css', array(), '1.2.2' );
+}
 
 if (class_exists("SupportGreatWriters")) {
   add_action('widgets_init', create_function('', 'return register_widget("SupportGreatWriters");'));
-  add_action('admin_menu', 'RegisterAdminPage'); //admin page
+  add_action('admin_menu', 'RegisterAdminPage'); 
+	add_action('wp_enqueue_scripts','RegisterWidgetStyle');
 }
 
 ?>
