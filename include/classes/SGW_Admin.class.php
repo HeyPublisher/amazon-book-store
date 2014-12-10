@@ -137,7 +137,7 @@ class SGW_Admin {
     if ($posts = $wpdb->get_results($sql, ARRAY_A)) {
       return $posts;
     }
-    return false;
+    return [];
   }
 
   public function truncate_string($str) {
@@ -156,7 +156,6 @@ class SGW_Admin {
     if(isset($_POST['save_settings'])) {
       check_admin_referer(SGW_ADMIN_PAGE_NONCE);
       if (isset($_POST['sgw_opt'])) {
-        // need to validate username and password against HeyPublisher and if valid save isvalidated boolean
         $opts = $_POST['sgw_opt'];
         // update the default settings
         if ($test = $this->normalize_asin_list($opts['default'])) {
