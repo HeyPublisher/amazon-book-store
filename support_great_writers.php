@@ -1,11 +1,11 @@
 <?php
 /*
-Plugin Name: Support Great Writers
+Plugin Name: Amazon Book Store
 Plugin URI: http://www.loudlever.com/wordpress-plugins/amazon-book-store/
-Description: Side-Bar Widget to display Amazon product images in your WordPress blog or magazine.  Can be configured to display the same products (static-mode) or products based upon the post itself (dynamic-mode).
-Author: Loudlever, Inc.
+Description: Sell Amazon products in the sidebar, based upon the POST or a default pool of products that you define.  Configure in Settings > Amazon Book Store.
+Author: Loudlever
 Author URI: http://www.loudlever.com
-Version: 1.1.2
+Version: 1.1.3
 
   $Id$
 

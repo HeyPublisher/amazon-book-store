@@ -4,7 +4,7 @@
     Tags             : affiliate sales, Amazon, ASIN, Amazon Associate, monetize
     Requires at least: 2.8
     Tested up to     : 4.0.1
-    Stable tag       : 1.1.1
+    Stable tag       : 1.1.3
     License          : GPLv2 or later
     License URI      : http://www.gnu.org/licenses/gpl-2.0.html
 

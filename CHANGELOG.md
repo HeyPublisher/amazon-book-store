@@ -1,5 +1,9 @@
 ###Changelog
 
+####1.1.3
+* Fixed a layout problem where books and media product images had different widths.
+* Updated description of plugin.
+
 ####1.1.2
 * Updated JavaScript in admin tool to make use of jQuery.
 * Fixed issue with ASIN assignment for existing POSTS in Admin screen.
