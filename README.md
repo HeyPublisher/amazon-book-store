@@ -1,10 +1,10 @@
 ##Amazon Book Store
-    Contributors     : Richard Luck
+    Contributors     : Loudlever
     Donate link      : https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Y8SL68GN5J2PL
     Tags             : affiliate sales, Amazon, ASIN, Amazon Associate, monetize
     Requires at least: 2.8
     Tested up to     : 4.0.1
-    Stable tag       : 1.1.3
+    Stable tag       : 2.0.0
     License          : GPLv2 or later
     License URI      : http://www.gnu.org/licenses/gpl-2.0.html
 

@@ -15,6 +15,8 @@ class SGW_Admin {
   var $max_asins_per = 4;
   var $post_meta_key = SGW_POST_META_KEY;
   var $error = false;
+  var $donate_link = 'https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Y8SL68GN5J2PL';
+
 
   public function __construct() {
     $this->options = get_option(SGW_PLUGIN_OPTTIONS);
@@ -24,6 +26,21 @@ class SGW_Admin {
     if ($this->options) {
       update_option(SGW_PLUGIN_OPTTIONS,$this->options);
     }
+  }
+
+	public function HtmlBoxHeader($id, $title) {
+?>
+			<div id="<?php echo $id; ?>" class="postbox">
+				<h3 class="hndle"><span><?php echo $title ?></span></h3>
+				<div class="inside">
+<?php
+	}
+
+	public function HtmlBoxFooter() {
+?>
+				</div>
+			</div>
+<?php
   }
 
   public function check_plugin_version() {
