@@ -2,7 +2,7 @@
 /*
 Plugin Name: Amazon Book Store
 Plugin URI: http://www.loudlever.com/wordpress-plugins/amazon-book-store/
-Description: Sell Amazon products in the sidebar, based upon the POST or a default pool of products that you define.  Configure in Settings > Amazon Book Store.
+Description: Sell Amazon products in the sidebar based upon the POST or a default pool of products that you define.
 Author: Loudlever
 Author URI: http://www.loudlever.com
 Version: 2.0.0
@@ -45,15 +45,20 @@ define('SGW_PLUGIN_OPTTIONS', '_sgw_plugin_options');
 define('SGW_BASE_URL', get_option('siteurl').'/wp-content/plugins/support-great-writers/');
 define('SGW_DEFAULT_IMAGE', get_option('siteurl').'/wp-content/plugins/support-great-writers/images/not_found.gif');
 define('SGW_POST_META_KEY','SGW_ASIN');
-define('SGW_ADMIN_PAGE','amazon_bookstore_options');
+define('SGW_ADMIN_PAGE','amazon_bookstore');
 define('SGW_ADMIN_PAGE_NONCE','sgw-save-options');
 define('SGW_PLUGIN_ERROR_CONTACT','Please contact <a href="mailto:wordpress@loudlever.com?subject=Amazon%20Bookstore%20Widget">wordpress@loudlever.com</a> if you have any questions');
 define('SGW_BESTSELLERS','0812974492,0316055441');
 // define('SGW_FEEDBACK_EMAIL_VALUE','wordpress@loudlever.com?subject=SGW%20Wordpress%20Plugin');
 // define('SGW_SVC_URL_STYLE_GUIDE','http://www.loudlever.com/docs/plugins/wordpress/style_guide');     # designates the URL of the style guide
 
+load_template(dirname(__FILE__) . '/include/classes/SGW_Admin.class.php');
+
 require_once('include/classes/SGW_Widget.class.php');
-require_once('include/classes/SGW_Admin.class.php');
+// require_once('include/classes/SGW_Admin.class.php');
+$sgw_admin = new SGW_Admin;
+// enable our link to the settings
+add_filter('plugin_action_links', array(&$sgw_admin,'plugin_link'), 10, 2 );
 
 function RegisterAdminPage() {
   // ensure our js and style sheet only get loaded on our admin page

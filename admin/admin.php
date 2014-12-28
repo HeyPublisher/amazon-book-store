@@ -76,7 +76,7 @@ if (is_user_logged_in() && is_admin() ){
         <!-- Right Side -->
 				<div class="inner-sidebar">
 					<div id="side-sortables" class="meta-box-sortabless ui-sortable" style="position:relative;">
-            <?php $sgw_admin->HtmlBoxHeader('sgw_about',__('About this Plugin','sgw'),true); ?>
+            <?php $sgw_admin->html_box_header('sgw_about',__('About this Plugin','sgw'),true); ?>
               <a class='sgw_button sgw_Home' href='https://wordpress.org/plugins/support-great-writers/' target='_blank'>
                 <?php _e('Plugin Homepage','sgw'); ?>
               </a>
@@ -86,12 +86,12 @@ if (is_user_logged_in() && is_admin() ){
               <a class='sgw_button sgw_PayPal' href='<?php echo $sgw_admin->donate_link; ?>' target='_blank'>
                 <?php _e('Donate with PayPal','sgw'); ?>
               </a>
-          	<?php $sgw_admin->HtmlBoxFooter(true); ?>  
-            <?php $sgw_admin->HtmlBoxHeader('sgw_how',__('How it Works','sgw'),true); ?>
+          	<?php $sgw_admin->html_box_footer(true); ?>  
+            <?php $sgw_admin->html_box_header('sgw_how',__('How it Works','sgw'),true); ?>
                 <a target=_new href='<?php echo SGW_BASE_URL; ?>images/flow.png' title='Click to see larger image'>
                   <img src='<?php echo SGW_BASE_URL; ?>images/flow_thumb.png'>
                 </a>
-          	<?php $sgw_admin->HtmlBoxFooter(true); ?>  
+          	<?php $sgw_admin->html_box_footer(true); ?>  
           </div>
         </div>
         <!-- Left Side -->
@@ -102,7 +102,7 @@ if (is_user_logged_in() && is_admin() ){
                 <?php
                   if(function_exists('wp_nonce_field')){ wp_nonce_field(SGW_ADMIN_PAGE_NONCE); }
                 ?>   
-                <?php $sgw_admin->HtmlBoxHeader('sgw_post_asins',__('POST-specific ASINs','sgw'),true); ?>
+                <?php $sgw_admin->html_box_header('sgw_post_asins',__('POST-specific ASINs','sgw'),true); ?>
                 <?php
                   // handle that case where a user has gone widget-happy
                   if (count($widget) > 2) {
@@ -147,8 +147,8 @@ if (is_user_logged_in() && is_admin() ){
                       }
                     ?>
                   </select>
-              	<?php $sgw_admin->HtmlBoxFooter(true); ?>  
-                <?php $sgw_admin->HtmlBoxHeader('sgw_default_asins',__('Default ASINs','sgw'),true); ?>
+              	<?php $sgw_admin->html_box_footer(true); ?>  
+                <?php $sgw_admin->html_box_header('sgw_default_asins',__('Default ASINs','sgw'),true); ?>
                   <p>Input a comma-separated list of the ASINs you would like displayed <em>if no other matches are made</em>.  These products will be displayed for those posts where you have not defined specific ASINs for display.</p>
                   <p>You <strong>must</b> input at least one AISN in the box below.</p>
                   <p>
@@ -156,7 +156,7 @@ if (is_user_logged_in() && is_admin() ){
                     <input type="text" name="sgw_opt[default]" id="sgw_default" class='sgw_input' value="<?php echo  $opts['default']; ?>" />
                     <input type="hidden" name="save_settings" value="1" />
                   </p>
-                <?php $sgw_admin->HtmlBoxFooter(true); ?>  
+                <?php $sgw_admin->html_box_footer(true); ?>  
                 <input type="submit" class="button-primary" name="save_button" value="<?php _e('Update Settings', 'sgw'); ?>" />
   	          </form>
             </div>

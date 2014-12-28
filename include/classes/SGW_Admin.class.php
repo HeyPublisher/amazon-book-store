@@ -16,7 +16,7 @@ class SGW_Admin {
   var $post_meta_key = SGW_POST_META_KEY;
   var $error = false;
   var $donate_link = 'https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Y8SL68GN5J2PL';
-
+  var $plugin_file = 'support-great-writers/support_great_writers.php';  # this helps us with the plugin_links
 
   public function __construct() {
     $this->options = get_option(SGW_PLUGIN_OPTTIONS);
@@ -28,7 +28,14 @@ class SGW_Admin {
     }
   }
 
-	public function HtmlBoxHeader($id, $title) {
+  public function plugin_link($links, $file) {
+    if ($file == $this->plugin_file) {
+      $settings_link = '<a href="options-general.php?page='.SGW_ADMIN_PAGE.'">'.__("Settings", "sgw").'</a>';
+      array_unshift($links, $settings_link);
+    }
+    return $links;
+  }
+	public function html_box_header($id, $title) {
 ?>
 			<div id="<?php echo $id; ?>" class="postbox">
 				<h3 class="hndle"><span><?php echo $title ?></span></h3>
@@ -36,7 +43,7 @@ class SGW_Admin {
 <?php
 	}
 
-	public function HtmlBoxFooter() {
+	public function html_box_footer() {
 ?>
 				</div>
 			</div>

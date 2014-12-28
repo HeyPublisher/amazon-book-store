@@ -1,5 +1,8 @@
 ###Changelog
 
+####2.0.0
+* Redesigned plugin and improved admin layout.
+
 ####1.1.3
 * Fixed a layout problem where books and media product images had different widths.
 * Updated description of plugin.
