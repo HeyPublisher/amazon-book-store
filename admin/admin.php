@@ -8,9 +8,7 @@
 
 if (is_user_logged_in() && is_admin() ){
 
-  $sgw_admin = new SGW_Admin;
   $sgw_admin->check_plugin_version();
-
   $message = $sgw_admin->update_options($_POST);
   $opts = get_option(SGW_PLUGIN_OPTTIONS);
   $posts = $sgw_admin->get_post_meta();
@@ -36,20 +34,6 @@ if (is_user_logged_in() && is_admin() ){
 
 ?>
 <style type='text/css'>
-  a.sgw_button {
-  	padding:4px;
-  	display:block;
-  	padding-left:35px;
-  	background-repeat:no-repeat;
-  	background-position:5px 50%;
-  	text-decoration:none;
-  	border:none;
-  }
-
-  a.sgw_button:hover {
-  	border-bottom-width:1px;
-  }
-
   a.sgw_PayPal {
     background-image:url(<?php echo SGW_BASE_URL; ?>images/paypal.png);
   }

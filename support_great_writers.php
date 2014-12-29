@@ -9,7 +9,7 @@ Version: 2.0.0
 
   $Id$
 
-  Copyright 2009-2014 Loudlever, Inc. (wordpress@loudlever.com)
+  Copyright 2009-2015 Loudlever (wordpress@loudlever.com)
 
   Permission is hereby granted, free of charge, to any person
   obtaining a copy of this software and associated documentation
@@ -34,6 +34,12 @@ Version: 2.0.0
 
 */
 
+// Make sure we don't expose any info if called directly
+if ( !function_exists( 'add_action' ) ) {
+	echo "Hi there!  I'm just a plugin, not much I can do when called directly.";
+	exit;
+}
+
 /*
 ---------------------------------------------------------------------------------
   OPTION SETTINGS
@@ -49,16 +55,14 @@ define('SGW_ADMIN_PAGE','amazon_bookstore');
 define('SGW_ADMIN_PAGE_NONCE','sgw-save-options');
 define('SGW_PLUGIN_ERROR_CONTACT','Please contact <a href="mailto:wordpress@loudlever.com?subject=Amazon%20Bookstore%20Widget">wordpress@loudlever.com</a> if you have any questions');
 define('SGW_BESTSELLERS','0812974492,0316055441');
-// define('SGW_FEEDBACK_EMAIL_VALUE','wordpress@loudlever.com?subject=SGW%20Wordpress%20Plugin');
-// define('SGW_SVC_URL_STYLE_GUIDE','http://www.loudlever.com/docs/plugins/wordpress/style_guide');     # designates the URL of the style guide
+define('SGW_PLUGIN_FILE',plugin_basename(__FILE__));
 
-load_template(dirname(__FILE__) . '/include/classes/SGW_Admin.class.php');
-
-require_once('include/classes/SGW_Widget.class.php');
-// require_once('include/classes/SGW_Admin.class.php');
+require_once(dirname(__FILE__) . '/include/classes/SGW_Widget.class.php');
+require_once(dirname(__FILE__) . '/include/classes/SGW_Admin.class.php');
 $sgw_admin = new SGW_Admin;
-// enable our link to the settings
-add_filter('plugin_action_links', array(&$sgw_admin,'plugin_link'), 10, 2 );
+
+// enable link to settings page
+add_filter($sgw_admin->plugin_filter(), array(&$sgw_admin,'plugin_link'), 10, 2 );
 
 function RegisterAdminPage() {
   // ensure our js and style sheet only get loaded on our admin page
@@ -73,6 +77,7 @@ function AdminHeader() {
 <?php  
 }
 function AdminPage() {
+  global $sgw_admin;
   require_once('admin/admin.php');
 }
 function AdminInit() {
@@ -87,5 +92,8 @@ if (class_exists("SupportGreatWriters")) {
   add_action('admin_menu', 'RegisterAdminPage'); 
 	add_action('wp_enqueue_scripts','RegisterWidgetStyle');
 }
+
+register_activation_hook( __FILE__, array(&$sgw_admin,'activate_plugin'));
+register_deactivation_hook( __FILE__, array(&$sgw_admin,'deactivate_plugin'));
 
 ?>

@@ -16,25 +16,34 @@ class SGW_Admin {
   var $post_meta_key = SGW_POST_META_KEY;
   var $error = false;
   var $donate_link = 'https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Y8SL68GN5J2PL';
-  var $plugin_file = 'support-great-writers/support_great_writers.php';  # this helps us with the plugin_links
 
   public function __construct() {
     $this->options = get_option(SGW_PLUGIN_OPTTIONS);
   }   
 
   public function __destruct() {
-    if ($this->options) {
-      update_option(SGW_PLUGIN_OPTTIONS,$this->options);
-    }
+    // nothing to see yet
   }
-
-  public function plugin_link($links, $file) {
-    if ($file == $this->plugin_file) {
-      $settings_link = '<a href="options-general.php?page='.SGW_ADMIN_PAGE.'">'.__("Settings", "sgw").'</a>';
-      array_unshift($links, $settings_link);
-    }
+  public function activate_plugin() {
+    // nothing to see yet
+  }
+  public function deactivate_plugin() {
+    $this->options = false;
+		delete_option(SGW_PLUGIN_OPTTIONS);
+	  return;
+  }
+  
+  // Called by plugin filter to create the link to settings
+  public function plugin_link($links) {
+    $links[] = '<a href="options-general.php?page='.SGW_ADMIN_PAGE.'">'.__("Settings", "sgw").'</a>';
     return $links;
   }
+  
+  // Filter for creating the link to settings
+  public function plugin_filter() {
+    return sprintf('plugin_action_links_%s',SGW_PLUGIN_FILE); 
+  }
+
 	public function html_box_header($id, $title) {
 ?>
 			<div id="<?php echo $id; ?>" class="postbox">
