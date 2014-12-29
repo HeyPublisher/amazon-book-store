@@ -89,7 +89,7 @@ if (is_user_logged_in() && is_admin() ){
                 <?php $sgw_admin->html_box_header('sgw_post_asins',__('POST-specific ASINs','sgw'),true); ?>
                 <?php
                   // handle that case where a user has gone widget-happy
-                  if (count($widget) > 2) {
+                  if (count($widget) > 1) {
                 ?>        
                 <p><strong>You are currently running <?php echo count($widget)-1; ?> instances of this widget.  Ensure that all are configured to use the same <code>country</code> code &#8212; or that you only use ASINs that will appear in both countries' catalogs.</strong></p>
                 <?php

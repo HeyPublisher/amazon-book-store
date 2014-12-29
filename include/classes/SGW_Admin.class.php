@@ -29,13 +29,14 @@ class SGW_Admin {
   }
   public function deactivate_plugin() {
     $this->options = false;
-		delete_option(SGW_PLUGIN_OPTTIONS);
+		delete_option(SGW_PLUGIN_OPTTIONS);  // remove the default options
 	  return;
   }
   
   // Called by plugin filter to create the link to settings
   public function plugin_link($links) {
-    $links[] = '<a href="options-general.php?page='.SGW_ADMIN_PAGE.'">'.__("Settings", "sgw").'</a>';
+    $settings = '<a href="options-general.php?page='.SGW_ADMIN_PAGE.'">'.__("Settings", "sgw").'</a>';
+    array_unshift($links, $settings);  // push to left side
     return $links;
   }
   
