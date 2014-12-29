@@ -43,6 +43,9 @@ if (is_user_logged_in() && is_admin() ){
   a.sgw_Suggestion {
     background-image:url(<?php echo SGW_BASE_URL; ?>images/suggestion.png);
   }
+  a.sgw_Contact {
+    background-image:url(<?php echo SGW_BASE_URL; ?>images/contact.png);
+  }
 </style>
 
     <div class="wrap">
@@ -60,17 +63,15 @@ if (is_user_logged_in() && is_admin() ){
         <!-- Right Side -->
 				<div class="inner-sidebar">
 					<div id="side-sortables" class="meta-box-sortabless ui-sortable" style="position:relative;">
-            <?php $sgw_admin->html_box_header('sgw_about',__('About this Plugin','sgw'),true); ?>
-              <a class='sgw_button sgw_Home' href='https://wordpress.org/plugins/support-great-writers/' target='_blank'>
-                <?php _e('Plugin Homepage','sgw'); ?>
-              </a>
-              <a class='sgw_button sgw_Suggestion' href='https://wordpress.org/support/plugin/support-great-writers' target='_blank'>
-                <?php _e('Suggestions','sgw'); ?>
-              </a>
-              <a class='sgw_button sgw_PayPal' href='<?php echo $sgw_admin->donate_link; ?>' target='_blank'>
-                <?php _e('Donate with PayPal','sgw'); ?>
-              </a>
-          	<?php $sgw_admin->html_box_footer(true); ?>  
+            <?php 
+              $sgw_admin->html_box_header('sgw_about',__('About this Plugin','sgw'),true);
+              // side bar elems
+              $sgw_admin->sidebar_link('PayPal',$sgw_admin->donate_link,'Donate with PayPal'); 
+              $sgw_admin->sidebar_link('Home','https://wordpress.org/plugins/support-great-writers/','Plugin Homepage'); 
+              $sgw_admin->sidebar_link('Suggestion','https://wordpress.org/support/plugin/support-great-writers','Suggestions'); 
+              $sgw_admin->sidebar_link('Contact','mailto:wordpress@loudlever.com','Contact Us'); 
+          	  $sgw_admin->html_box_footer(true); 
+          	?>  
             <?php $sgw_admin->html_box_header('sgw_how',__('How it Works','sgw'),true); ?>
                 <a target=_new href='<?php echo SGW_BASE_URL; ?>images/flow.png' title='Click to see larger image'>
                   <img src='<?php echo SGW_BASE_URL; ?>images/flow_thumb.png'>

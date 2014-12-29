@@ -60,6 +60,10 @@ class SGW_Admin {
 <?php
   }
 
+  public function sidebar_link($key,$link,$text) {
+    printf('<a class="sgw_button sgw_%s" href="%s" target="_blank">%s</a>',$key,$link,__($text,'sgw'));
+  }
+  
   public function check_plugin_version() {
     $opts = get_option(SGW_PLUGIN_OPTTIONS);
     if (!$opts || !$opts[plugin] || $opts[plugin][version_last] == false) {
