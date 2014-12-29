@@ -46,7 +46,7 @@ if ( !function_exists( 'add_action' ) ) {
 ---------------------------------------------------------------------------------
 */  
 
-define("SGW_PLUGIN_VERSION", "1.1.2");
+define('SGW_PLUGIN_VERSION', '2.0.0');
 define('SGW_PLUGIN_OPTTIONS', '_sgw_plugin_options');
 define('SGW_BASE_URL', get_option('siteurl').'/wp-content/plugins/support-great-writers/');
 define('SGW_DEFAULT_IMAGE', get_option('siteurl').'/wp-content/plugins/support-great-writers/images/not_found.gif');

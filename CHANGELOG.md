@@ -1,7 +1,8 @@
 ###Changelog
 
 ####2.0.0
-* Redesigned plugin and improved admin layout.
+* Improved administration screen layout.
+* WordPress 4.1 compliant.
 
 ####1.1.3
 * Fixed a layout problem where books and media product images had different widths.

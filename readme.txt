@@ -18,7 +18,7 @@ You can sell specific products on specific pages of your website, or define a 'p
 
 == About Us ==
 
-Developed by the fine folks at [Loudlever, Inc.](http://www.loudlever.com), this plugin allows blog owners and WordPress publishers to monetize their content through [Amazon affiliate sales](http://associates.amazon.com).  We believe that it should be as easy for site owners to use our tools, so if you experience any difficulties getting things set up please email us at: wordpress@loudlever.com. 
+Developed by the fine folks at [Loudlever](http://www.loudlever.com), this plugin allows blog owners and WordPress publishers to monetize their content through [Amazon affiliate sales](http://associates.amazon.com).  It should be easy for you to get started, but if you experience any difficulties getting things set up please email us at: wordpress@loudlever.com. 
 
 == Installation ==
 
@@ -55,6 +55,10 @@ Yes.  Absolutely.  Each instance can be configured separately.  Give the widgets
 4. ASIN pool configuration for POSTs and for Default pool
 
 == Upgrade Notice ==
+
+= 2.0.0 =
+* Improved administration screen layout.
+* WordPress 4.1 compliant.
 
 = 1.1.2 =
 * Upgraded to jQuery and made WordPress 4.x compatible.
