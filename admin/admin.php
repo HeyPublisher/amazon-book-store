@@ -94,13 +94,13 @@ if (is_user_logged_in() && is_admin() ){
                     <input type="text" name="sgw_opt[affiliate_id]" id="affiliate_id" class='sgw_input' value="<?php echo  $opts['affiliate_id']; ?>" />
                   </p>
                   <p>
-                    <label class='sgw_label' for='sgw_country_id'>Affiliate Country:</label>
-                    <select name="sgw_opt[sgw_country_id]" id="sgw_country_id" class='sgw_input'>
+                    <label class='sgw_label' for='country_id'>Affiliate Country:</label>
+                    <select name="sgw_opt[country_id]" id="country_id" class='sgw_input'>
                       <?php
                         $countries = $sgw_admin->supported_countries();
                         foreach ($countries as $key=>$val) {
                           $sel = '';
-                          if ($opts['sgw_country_id']==$key) { $sel = 'selected="selected"'; }
+                          if ($opts['country_id']==$key) { $sel = 'selected="selected"'; }
                           printf("<option value='%s' %s>%s</option>",$key,$sel,$val);
                         }
                       ?>          
