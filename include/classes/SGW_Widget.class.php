@@ -10,7 +10,6 @@ class SupportGreatWriters extends WP_Widget {
 		$control_ops = array( 'id_base' => 'sgw' );
 		$widget_ops = array('description' => __('Easily sell Amazon books or other products in sidebar.','sgw'));
 	  parent::__construct('sgw', __('Amazon Book Store','sgw'), $widget_ops,$control_ops );
-    // $this->WP_Widget( 'sgw', 'Amazon Book Store', $widget_ops, $control_ops );
 	}
 
   /**
