@@ -2,10 +2,10 @@
 /*
 Plugin Name: Amazon Book Store
 Plugin URI: http://www.loudlever.com/wordpress-plugins/amazon-book-store/
-Description: Sell Amazon products in a sidebar widget, based upon the POST or a default pool of products that you define.
+Description: Sell Amazon products in sidebar widgets, based upon the individual POST or a default pool of products that you define.
 Author: Loudlever
 Author URI: http://www.loudlever.com
-Version: 2.0.1
+Version: 2.1.0
 
   $Id$
 
@@ -46,7 +46,7 @@ if ( !function_exists( 'add_action' ) ) {
 ---------------------------------------------------------------------------------
 */  
 
-define('SGW_PLUGIN_VERSION', '2.0.0');
+define('SGW_PLUGIN_VERSION', '2.1.0');
 define('SGW_PLUGIN_OPTTIONS', '_sgw_plugin_options');
 define('SGW_BASE_URL', get_option('siteurl').'/wp-content/plugins/support-great-writers/');
 define('SGW_DEFAULT_IMAGE', get_option('siteurl').'/wp-content/plugins/support-great-writers/images/not_found.gif');
