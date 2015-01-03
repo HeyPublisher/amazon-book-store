@@ -1,7 +1,5 @@
 <?php
 /*
-  $Id$
-  
   Admin Class
   
   Contains all of the functions for managing SGW administration functions.
@@ -358,6 +356,8 @@ EOF;
                     ?>   
                     <!-- Default Settings -->
                     <?php $this->html_box_header('sgw_default_asins',__('Settings','sgw'),true); ?>
+      						  <p>Add the widget to your side-bar and configure which products you want to sell using the form below.</p>
+
                       <p>
                         <label class='sgw_label' for='sgw_affiliate_id'>Affiliate ID:</label>
                         <input type="text" name="sgw_opt[affiliate_id]" id="affiliate_id" class='sgw_input' value="<?php echo  $opts['affiliate_id']; ?>" />
@@ -383,16 +383,7 @@ EOF;
                       </p>
                     <?php $this->html_box_footer(true); ?>  
                     <?php $this->html_box_header('sgw_post_asins',__('POST-specific ASINs','sgw'),true); ?>
-                    <?php
-                      // handle that case where a user has gone widget-happy
-                      if (count($widget) > 1) {
-                    ?>        
-                    <p><strong>You are currently running <?php echo count($widget)-1; ?> instances of this widget.  Ensure that all are configured to use the same <code>country</code> code &#8212; or that you only use ASINs that will appear in both countries' catalogs.</strong></p>
-                    <?php
-                      }
-                    ?>
-                      <p>You can manage the ASINs for all POSTs using the form below.  Or, you can manage the ASINs for individual POSTs on the Post Edit page.  When managing ASINs on a Post page, use the custom field <code><?php echo $this->post_meta_key; ?></code> and input a comma-separated list of ASINs.</p>
-                      <p>To remove a POST-specific setting, simply clear the input field and click the 'Update Settings' button.</p>
+                      <p>If you want specific products to display on individual pages, add those product ASINs here.  Select the POST from the drop-down list below then input the desired ASINs as a comma-separated list.  You can add as many or as few as you like.  You can also set the ASINs in the Post Edit page by using the custom field <code><?php echo $this->post_meta_key; ?></code>.</p>
                       <?php
                         if ($posts) {
                           foreach ($posts as $id=>$hash) {
