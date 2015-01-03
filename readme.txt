@@ -1,5 +1,5 @@
 === Amazon Book Store ===
-Contributors: Loudlever
+Contributors: loudlever
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Y8SL68GN5J2PL
 Tags: affiliate sales, Amazon, ASIN, Amazon Associate, monetize, Loudlever
 Requires at least: 2.8
@@ -8,11 +8,11 @@ Stable tag: 2.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Sell Amazon products in the sidebar, based upon the POST or a default pool of products that you define.
+Sell Amazon products in a sidebar widget, based upon the POST or a default pool of products that you define.
 
 == Description ==
 
-The Amazon Book Store (formerly 'Support Great Writers') Widget provides a very simple way to sell Amazon products via a sidebar widget on your blog, magazine, or other WordPress-powered website.  The widget can be instantiated multiple times, with different products being displayed in each instance.  
+The Amazon Book Store widget gives you a simple way to sell Amazon products in the sidebar of your blog, magazine, or other WordPress-powered website.  The widget can be included multiple times, with different products being displayed in each instance.  
 
 You can sell specific products on specific pages of your website, or define a 'pool' of products from which the widget will randomly chose from.  This allows you to quickly build up an Amazon store of products that are related to your individual POSTs.  
 
@@ -33,7 +33,7 @@ Install the plugin, then activate it.  Once activated, configure the Widget:
 
 **Configure the ASIN pool**
 
-Navigate to 'Settings' -> 'Amazon Book Store' and add the ASINs for the products you want to be displayed in the widget.  See [What are ASINs](http://www.amazon.com/gp/seller/asin-upc-isbn-info.html) for more information.  There are two categorizations of settings:
+Navigate to 'Settings' -> 'Amazon Book Store' and add the ASINs for the products you want to be displayed in the widget.  See [How to Find Amazon ASINs](http://askville.amazon.com/find-Amazon-ASIN-product-details-page/AnswerViewer.do?requestId=11106037) for more information.  There are two categorizations of settings:
 
 * POST Specific:  If set, these products will be displayed when users are reading the designated POST.
 * Default: If the request is to a POST that does not have specific ASINs defined, then the widget will display products from this group.

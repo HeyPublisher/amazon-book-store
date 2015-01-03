@@ -9,6 +9,7 @@
 */
 class SGW_Admin {
 
+  var $help = false;
   var $options = array();
   var $old_widget_name = 'widget_supportgreatwriters';
   var $widget_name = 'widget_sgw';
@@ -186,6 +187,23 @@ class SGW_Admin {
     return $str;
   }
 
+  public function supported_countries() {
+    $countries = array(
+      'us' => 'United States', 
+      'uk' => 'United Kingdon', 
+      'de' => 'Germany', 
+      'fr' => 'France', 
+      'ca' => 'Canada'
+    );
+    // $countries = array(
+    //   'us' => 'amazon.com', 
+    //   'uk' => 'amazon.co.uk', 
+    //   'de' => 'amazon.de', 
+    //   'fr' => 'amazon.fr', 
+    //   'ca' => 'amazon.ca');
+    return $countries;
+  }
+
   /**
   * Update all of the page options sent by the form post
   */
@@ -239,5 +257,24 @@ class SGW_Admin {
       return $message;
     }
   }
+	/* Contextual Help for the Plugin Configuration Screen */
+  public function configuration_screen_help($contextual_help, $screen_id, $screen) {
+    if ($screen_id == $this->help) {
+      $contextual_help = <<<EOF
+<h2>Overview</h2>      
+<p>You can sell any kind of Amazon product using this plugin.  To begin, you must first find the ASIN of the product(s) you want to sell.  See <a href="http://askville.amazon.com/find-Amazon-ASIN-product-details-page/AnswerViewer.do?requestId=11106037" target=_blank>How to Find Amazon ASINs</a> for more information.  You can input more than one ASIN - just seperate multiple values with a comma.
+</p>
+
+<h2>Settings</h2>
+<p>Input your Amazon Affiliate ID and select the approprite affiliate country.  Additionally, input a comma-separated list of ASINs for the products you want to display <i>by default</i> if a more specific list for an individual POST is not configured.  To get you started, we've pre-populated this field with two of the best-selling books currently on Amazon.</p>
+
+<h2>POST-specific ASINs</h2>
+<p>Select a POST from the drop-down list and an input field will be added to the page where you can input the ASINs for the products you want displayed specifically on that page.  Alternatively, you can edit the POST directly, adding the custom field <code>$this->post_meta_key</code>.</p>
+
+EOF;
+    }
+  	return $contextual_help;
+  }
+  
 }
 ?>

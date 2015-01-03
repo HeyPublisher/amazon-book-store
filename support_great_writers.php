@@ -2,10 +2,10 @@
 /*
 Plugin Name: Amazon Book Store
 Plugin URI: http://www.loudlever.com/wordpress-plugins/amazon-book-store/
-Description: Sell Amazon products in the sidebar based upon the POST or a default pool of products that you define.
+Description: Sell Amazon products in a sidebar widget, based upon the POST or a default pool of products that you define.
 Author: Loudlever
 Author URI: http://www.loudlever.com
-Version: 2.0.0
+Version: 2.0.1
 
   $Id$
 
@@ -65,8 +65,10 @@ $sgw_admin = new SGW_Admin;
 add_filter($sgw_admin->plugin_filter(), array(&$sgw_admin,'plugin_link'), 10, 2 );
 
 function RegisterAdminPage() {
+  global $sgw_admin;
   // ensure our js and style sheet only get loaded on our admin page
   $page = add_options_page('Amazon Book Store', 'Amazon Book Store', 'manage_options', SGW_ADMIN_PAGE, 'AdminPage');
+  $sgw_admin->help = $page;
   add_action("admin_print_scripts-$page", 'AdminInit');
   add_action("admin_print_styles-$page", 'AdminHeader' );
 }
@@ -91,6 +93,8 @@ if (class_exists("SupportGreatWriters")) {
   add_action('widgets_init', create_function('', 'return register_widget("SupportGreatWriters");'));
   add_action('admin_menu', 'RegisterAdminPage'); 
 	add_action('wp_enqueue_scripts','RegisterWidgetStyle');
+	add_filter('contextual_help', array(&$sgw_admin,'configuration_screen_help'), 10, 3);
+
 }
 
 register_activation_hook( __FILE__, array(&$sgw_admin,'activate_plugin'));

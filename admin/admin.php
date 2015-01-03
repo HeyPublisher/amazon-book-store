@@ -87,6 +87,32 @@ if (is_user_logged_in() && is_admin() ){
                 <?php
                   if(function_exists('wp_nonce_field')){ wp_nonce_field(SGW_ADMIN_PAGE_NONCE); }
                 ?>   
+                <!-- Default Settings -->
+                <?php $sgw_admin->html_box_header('sgw_default_asins',__('Settings','sgw'),true); ?>
+                  <p>
+                    <label class='sgw_label' for='sgw_affiliate_id'>Affiliate ID:</label>
+                    <input type="text" name="sgw_opt[affiliate_id]" id="affiliate_id" class='sgw_input' value="<?php echo  $opts['affiliate_id']; ?>" />
+                  </p>
+                  <p>
+                    <label class='sgw_label' for='sgw_country_id'>Affiliate Country:</label>
+                    <select name="sgw_opt[sgw_country_id]" id="sgw_country_id" class='sgw_input'>
+                      <?php
+                        $countries = $sgw_admin->supported_countries();
+                        foreach ($countries as $key=>$val) {
+                          $sel = '';
+                          if ($opts['sgw_country_id']==$key) { $sel = 'selected="selected"'; }
+                          printf("<option value='%s' %s>%s</option>",$key,$sel,$val);
+                        }
+                      ?>          
+                    </select>
+                  </p>
+
+                  <p>
+                    <label class='sgw_label' for='sgw_default_asins'>Default ASINs:</label>
+                    <input type="text" name="sgw_opt[default]" id="sgw_default" class='sgw_input' value="<?php echo  $opts['default']; ?>" />
+                    <input type="hidden" name="save_settings" value="1" />
+                  </p>
+                <?php $sgw_admin->html_box_footer(true); ?>  
                 <?php $sgw_admin->html_box_header('sgw_post_asins',__('POST-specific ASINs','sgw'),true); ?>
                 <?php
                   // handle that case where a user has gone widget-happy
@@ -133,15 +159,6 @@ if (is_user_logged_in() && is_admin() ){
                     ?>
                   </select>
               	<?php $sgw_admin->html_box_footer(true); ?>  
-                <?php $sgw_admin->html_box_header('sgw_default_asins',__('Default ASINs','sgw'),true); ?>
-                  <p>Input a comma-separated list of the ASINs you would like displayed <em>if no other matches are made</em>.  These products will be displayed for those posts where you have not defined specific ASINs for display.</p>
-                  <p>You <strong>must</b> input at least one AISN in the box below.</p>
-                  <p>
-                    <label class='sgw_label' for='sgw_default_asins'>Default ASINs:</label>
-                    <input type="text" name="sgw_opt[default]" id="sgw_default" class='sgw_input' value="<?php echo  $opts['default']; ?>" />
-                    <input type="hidden" name="save_settings" value="1" />
-                  </p>
-                <?php $sgw_admin->html_box_footer(true); ?>  
                 <input type="submit" class="button-primary" name="save_button" value="<?php _e('Update Settings', 'sgw'); ?>" />
   	          </form>
             </div>
