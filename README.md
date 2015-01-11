@@ -1,14 +1,14 @@
 ##Amazon Book Store
     Contributors     : Loudlever
     Donate link      : https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Y8SL68GN5J2PL
-    Tags             : book store, affiliate sales, Amazon, ASIN, Amazon Associate, monetize
+    Tags             : affiliate, amazon, product, book store, affiliate sales,ASIN, Amazon Associate, monetize
     Requires at least: 2.8
-    Tested up to     : 4.0.1
-    Stable tag       : 2.0.0
+    Tested up to     : 4.1.0
+    Stable tag       : 2.1.0
     License          : GPLv2 or later
     License URI      : http://www.gnu.org/licenses/gpl-2.0.html
 
-Sell Amazon products in the sidebar, based upon the POST or a default pool of products that you define.
+Sell Amazon products in sidebar widgets, unique to the individual POST or generically from a default pool of products that you define.
 
 ###Description
 

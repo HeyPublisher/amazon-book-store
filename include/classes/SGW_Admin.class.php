@@ -18,25 +18,29 @@ class SGW_Admin {
 
   public function __construct() {
     $this->options = get_option(SGW_PLUGIN_OPTTIONS);
-    // printf("<pre>__construct()\nREQ: %s\naction = %s</pre>",print_r($this->options,1),$_REQUEST['action']); 
-    
   }   
 
   public function __destruct() {
     // nothing to see yet
   }
   public function activate_plugin() {
-    // nothing to see yet
+    $this->log("in the activate_plugin()");
+    $this->check_plugin_version();
   }
   public function deactivate_plugin() {
     $this->options = false;
-		delete_option(SGW_PLUGIN_OPTTIONS);  // remove the default options
+    delete_option(SGW_PLUGIN_OPTTIONS);  // remove the default options
 	  return;
   }
   
+  private function plugin_admin_url() {
+    $url = 'options-general.php?page='.SGW_ADMIN_PAGE;
+    return $url;
+  }
   // Called by plugin filter to create the link to settings
   public function plugin_link($links) {
-    $settings = '<a href="options-general.php?page='.SGW_ADMIN_PAGE.'">'.__("Settings", "sgw").'</a>';
+    $url = $this->plugin_admin_url();
+    $settings = '<a href="'. $url . '">'.__("Settings", "sgw").'</a>';
     array_unshift($links, $settings);  // push to left side
     return $links;
   }
@@ -66,8 +70,12 @@ class SGW_Admin {
   }
   
   public function check_plugin_version() {
+    $this->log("in check_plugin_version()");
+    
     $opts = get_option(SGW_PLUGIN_OPTTIONS);
+    // printf("<pre>In check_plugin_version()\n opts = %s</pre>",print_r($opts,1));
     if (!$opts || !$opts[plugin] || $opts[plugin][version_last] == false) {
+      $this->log("no old version - initializing");
       $this->init_plugin();
       // there is a possible upgrade path from old widget to this one - in which case we want to migrate data
       $this->migrate_old_widget();
@@ -75,6 +83,7 @@ class SGW_Admin {
     }
     // check for upgrade option here
     if ($opts[plugin][version_current] != SGW_PLUGIN_VERSION) {
+      $this->log("need to upgrade version");
       $this->upgrade_plugin($opts);
       return;
     }
@@ -96,14 +105,29 @@ class SGW_Admin {
     }
     return;
   }
+  private function get_version_as_int($str) {
+    $var = intval(preg_replace("/[^0-9 ]/", '', $str));
+    return $var;
+  }
 
   /**
-  * Init the Plugin
+  * Upgrade path
   */
   private function upgrade_plugin($opts) {
-    // $opts is what's stored in the database
-    // we don't have an upgrade path for rev2 of plugin yet - so this method will be written when that time comes
-    
+    $ver = $this->get_version_as_int($this->options[plugin][version_current]);
+    $this->log("Version = $ver");
+    // printf("<pre>In upgrade_plugin()\n ver = %s\nopts = %s</pre>",print_r($ver,1),print_r($this->options,1));
+    if ($ver < 210) {
+      $url = $this->plugin_admin_url();
+      // need to show the mesage about id changing 
+      // $html = '<div class="updated"><p>';
+      // $html .= __( 'You will need to update your Amazon Associate ID <a href="'.$url.'">on the Settings page</a>.', 'sgw' );
+      // echo $html;
+    }
+    $this->options[plugin][version_last] = $this->options[plugin][version_current];
+    $this->options[plugin][version_current] = SGW_PLUGIN_VERSION;
+    $this->options[plugin][upgrade_date] = Date('Y-m-d');
+    update_option(SGW_PLUGIN_OPTTIONS,$this->options);
   }
 
   /**
@@ -114,6 +138,7 @@ class SGW_Admin {
     $this->options[plugin][version_last] = SGW_PLUGIN_VERSION;
     $this->options[plugin][version_current] = SGW_PLUGIN_VERSION;
     $this->options[plugin][install_date] = Date('Y-m-d');
+    $this->options[plugin][upgrade_date] = Date('Y-m-d');
     add_option(SGW_PLUGIN_OPTTIONS,$this->options);
     return;
   }
@@ -275,7 +300,6 @@ EOF;
   public function configuration_screen() {
     if (is_user_logged_in() && is_admin() ){
 
-      $this->check_plugin_version();
       $message = $this->update_options($_POST);
       $opts = get_option(SGW_PLUGIN_OPTTIONS);
       $posts = $this->get_post_meta();
@@ -294,6 +318,9 @@ EOF;
             $posts[$x] = $hash;
           }
         }
+      }
+      if ($opts['default'] && !$opts['affiliate_id']) {
+        // $this->missing_affiliate_id();
       }
     	if (!$opts['default']) {
     		$opts['default'] = SGW_BESTSELLERS;
@@ -430,6 +457,18 @@ EOF;
 
     }
     
+  }
+  private function log($msg) {
+    if (SGW_DEBUG) {
+      error_log(sprintf("%s\n",$msg),3,dirname(__FILE__) . '/../../error.log');
+    }
+  }
+  private function missing_affiliate_id() {
+?>    
+    <div id="affiliate_id_message" class="update-nag">
+      <p>Though this plugin will work without one, until you input your Affiliate ID you will not get credit for sales made from the widget.</p>
+    </div>
+<?php  
   }
 }
 ?>

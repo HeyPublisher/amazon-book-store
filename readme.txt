@@ -1,14 +1,14 @@
 === Amazon Book Store ===
 Contributors: loudlever
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Y8SL68GN5J2PL
-Tags: book store,affiliate sales, Amazon, ASIN, Amazon Associate, monetize, Loudlever
+Tags: affiliate, amazon, product, book store, affiliate sales,ASIN, Amazon Associate, monetize
 Requires at least: 2.8
 Tested up to: 4.1.0
-Stable tag: 2.0.0
+Stable tag: 2.1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Sell Amazon products in sidebar widgets, based upon the individual POST or a default pool of products that you define.
+Sell Amazon products in sidebar widgets, unique to the individual POST or generically from a default pool of products that you define.
 
 == Description ==
 
@@ -48,9 +48,7 @@ Yes.  Absolutely.  The widget will keep track of which products have already bee
 == Upgrade Notice ==
 
 = 2.1.0 =
-* Affiliate ID and Country now managed on the Settings page - you will need to update these values after upgrading.
-* Duplicate products are no longer displayed when you use the widget multiple times on a page.
-* Widget no longer displays on page if there are insufficient remaining ASINs for it's display.
+* Affiliate ID and Country are now managed on the Settings page - you will need to update these values after upgrading.
 
 = 2.0.0 =
 * Improved administration screen layout.
@@ -70,10 +68,9 @@ Yes.  Absolutely.  The widget will keep track of which products have already bee
 == Changelog ==
 
 = 2.1.0 =
-* Affiliate ID and Country now managed on the Settings page - you will need to update these values after upgrading.
+* Affiliate ID and Country are now managed on the Settings page - you will need to update these values after upgrading.
 * Duplicate products are no longer displayed when you use the widget multiple times on a page.
-* Moved the admin screen into the Admin class.
-* Widget no longer displays on page if there are insufficient remaining ASINs for it's display.  
+* Widget no longer displays on page if there are insufficient unique ASINs for it's display.  
 
 = 2.0.0 =
 * Redesigned plugin and improved admin layout.

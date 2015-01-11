@@ -1,10 +1,9 @@
 ###Changelog
 
 ####2.1.0
-* Affiliate ID and Country now managed on the Settings page - you will need to update these values after upgrading.
+* Affiliate ID and Country are now managed on the Settings page - you will need to update these values after upgrading.
 * Duplicate products are no longer displayed when you use the widget multiple times on a page.
-* Moved the admin screen into the Admin class.
-* Widget no longer displays on page if there are insufficient remaining ASINs for it's display.  
+* Widget no longer displays on page if there are insufficient unique ASINs for it's display.  
 
 ####2.0.0
 * Improved administration screen layout.
