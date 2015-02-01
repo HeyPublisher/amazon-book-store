@@ -1,7 +1,10 @@
 ###Changelog
 
+####2.1.3
+* Fixed error with returning empty array in older versions of PHP.
+
 ####2.1.2
-* Fixed error with array initialization on older version of PHP.
+* Fixed error with array initialization occurring with older versions of PHP.
 
 ####2.1.1
 * SVN upgrade error.
