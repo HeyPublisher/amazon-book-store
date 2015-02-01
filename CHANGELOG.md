@@ -1,5 +1,11 @@
 ###Changelog
 
+####2.1.2
+* Fixed error with array initialization on older version of PHP.
+
+####2.1.1
+* SVN upgrade error.
+
 ####2.1.0
 * Affiliate ID and Country are now managed on the Settings page - you will need to update these values after upgrading.
 * Duplicate products are no longer displayed when you use the widget multiple times on a page.
