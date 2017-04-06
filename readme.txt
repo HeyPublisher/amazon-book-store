@@ -1,10 +1,10 @@
 === Amazon Book Store ===
-Contributors: loudlever
+Contributors: heypublisher, aguywithanidea, loudlever
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Y8SL68GN5J2PL
-Tags: affiliate, amazon, product, book store, affiliate sales,ASIN, Amazon Associate, monetize
-Requires at least: 2.8
-Tested up to: 4.1.0
-Stable tag: 2.1.3
+Tags: affiliate, amazon, product, book store, affiliate sales,ASIN, Amazon Associate, monetize, heypublisher
+Requires at least: 4.0
+Tested up to: 4.7.3
+Stable tag: 2.2.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,9 +12,9 @@ Sell Amazon products in sidebar widgets, unique to the individual POST or generi
 
 == Description ==
 
-The Amazon Book Store widget gives you a simple way to sell Amazon products in the sidebar of your blog, magazine, or other WordPress-powered website.  The widget can be included multiple times, with different products being displayed in each instance.  
+The Amazon Book Store widget gives you a simple way to sell Amazon products in the sidebar of your blog, magazine, or other WordPress-powered website.  The widget can be included multiple times, with different products being displayed in each instance.
 
-You can sell specific products on specific pages of your website, or define a 'pool' of products from which the widget will randomly chose.  This allows you to quickly build up an Amazon store of products that are related to your individual POSTs.  
+You can sell specific products on specific pages of your website, or define a 'pool' of products from which the widget will randomly chose.  This allows you to quickly build up an Amazon store of products that are related to your individual POSTs.
 
 == Installation ==
 
@@ -22,7 +22,7 @@ You can sell specific products on specific pages of your website, or define a 'p
 
 Install the plugin, then activate it.  Once activated, configure the Widget:
 
-* First, drag the 'Amazon Book Store' widget to your sidebar. 
+* First, drag the 'Amazon Book Store' widget to your sidebar.
 * Where prompted, set the "Title" you want displayed above the widget
 * Select how many product images you want displayed in the widget, 1 or 2.
 
@@ -38,6 +38,9 @@ Navigate to 'Settings' -> 'Amazon Book Store'.  Input your Amazon Affiliate ID a
 = Can I Use This Widget More Than Once In My Sidebar? =
 Yes.  Absolutely.  The widget will keep track of which products have already been displayed on the page and will ensure that duplicates are not shown.
 
+= Can I Make a Donation to HeyPublisher for Use of this Plugin? =
+If you wish to make a donation, please consider donating instead to the [Literary Arts](https://www.literary-arts.org/contribute/) organization.  Literary Arts introduces high school students to the craft of writing.  They are our kind of group!
+
 == Screenshots ==
 
 1. Widget displayed in the Widget manager.
@@ -45,33 +48,15 @@ Yes.  Absolutely.  The widget will keep track of which products have already bee
 3. Widget process flow, illustrating how the products are selected for display
 4. ASIN configuration for POSTs and for Default pool
 
-== Upgrade Notice ==
-
-= 2.1.3 =
-* This version fixes the `Parse error: syntax error, unexpected '[' in SGW_Admin.class.php on line 205` error.
-
-= 2.1.2 =
-* This version fixes the `Parse error: syntax error, unexpected '[' in SGW_Widget.class.php on line 7` error.
-
-= 2.1.0 =
-* Affiliate ID and Country are now managed on the Settings page - you will need to update these values after upgrading.
-
-= 2.0.0 =
-* Improved administration screen layout.
-* WordPress 4.1 compliant.
-
-= 1.1.2 =
-* Upgraded to jQuery and made WordPress 4.x compatible.
-
-= 1.1.1 =
-* Fixed problem with wrapping of form labels on the Settings page.
-
-= 1.1.0 =
-* IMPORTANT: If you're upgrading from a previous version of the widget, please take note that the name of the widget has been changed from 'SupportGreatAuthors' to 'Amazon Book Store'.
-* There is now a configuration management screen at 'Settings' -> 'Amazon Book Store' where you can define the default ASINs to display in the widget and/or associate specific ASINS to specific POSTs.
-* This version delivers enhanced functionality and the ability to create a 'pool' of products which the widget will randomly select from.  Because of this functionality, when upgrading from a previous installed version, the plugin will do it's best to migrate your previous settings to the new configuration.  If you had multiple instances of the plugin installed in your sidebar, this migration may not work as smoothly as we'd hope.  Please check your configurations after installing.
-
 == Changelog ==
+
+= 2.2.0 =
+* Released: 2017-04-10
+* This plugin is now maintained by [HeyPublisher](https://www.heypublisher.com)
+* Cleaned out a bunch of the kruft
+* Standardized the plugin layout using HeyPublisher plugin framework
+* Validated this plugin works up to WordPress 4.7.3
+* Added Italy and Spain as supported Affiliate countries
 
 = 2.1.3 =
 * Fixed error with returning empty array in older versions of PHP.
@@ -85,7 +70,7 @@ Yes.  Absolutely.  The widget will keep track of which products have already bee
 = 2.1.0 =
 * Affiliate ID and Country are now managed on the Settings page - you will need to update these values after upgrading.
 * Duplicate products are no longer displayed when you use the widget multiple times on a page.
-* Widget no longer displays on page if there are insufficient unique ASINs for it's display.  
+* Widget no longer displays on page if there are insufficient unique ASINs for it's display.
 
 = 2.0.0 =
 * Redesigned plugin and improved admin layout.
@@ -102,9 +87,9 @@ Yes.  Absolutely.  The widget will keep track of which products have already bee
 * Release date (12/8/2014)
 
 = 1.1.1 =
-* Fixed problem with wrapping of form labels on the Settings page.  
+* Fixed problem with wrapping of form labels on the Settings page.
 * Extra long POST titles are now truncated to 40 characters for display purposes.
-* Removed the POST id from the display title. 
+* Removed the POST id from the display title.
 * Added screenshot showing Settings configuration screen.
 
 = 1.1.0 =
@@ -112,7 +97,7 @@ Yes.  Absolutely.  The widget will keep track of which products have already bee
 * Added configuration management screen at 'Settings' -> 'Amazon Book Store'
 * Widget can now be used with UK, DE, FR and CA affiliate programs.
 * Widget can be configured to display 1 or 2 product images in widget.
-* Added ability to create a 'pool' of ASINs for POSTs, as well as a 'default' pool to be used as a last resort.   
+* Added ability to create a 'pool' of ASINs for POSTs, as well as a 'default' pool to be used as a last resort.
 
 = 1.0.1 =
 * Updated screenshots to highlight the fact that users should change their Amazon Associate ID.

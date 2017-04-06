@@ -1,11 +1,15 @@
 <?php
+namespace AMZNBS;
 /*
   Admin Class
-  
-  Contains all of the functions for managing SGW administration functions.
+
+  Contains all of the functions for managing AMZNBS administration functions.
 
 */
-class SGW_Admin {
+if (!class_exists('\HeyPublisher\Base')) {
+  load_template(dirname( __FILE__ ) . '/../HeyPublisher/Base.class.php');
+}
+class Admin extends \HeyPublisher\Base {
 
   var $help = false;
   var $options = array();
@@ -15,24 +19,40 @@ class SGW_Admin {
   var $post_meta_key = SGW_POST_META_KEY;
   var $error = false;
   var $donate_link = 'https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Y8SL68GN5J2PL';
+  var $defaults = array('tag' => 'SGW_ASIN', 'aff_id' => 'sgw02-20', 'aff_cc' => 'com');
 
   public function __construct() {
+    parent::__construct();
     $this->options = get_option(SGW_PLUGIN_OPTTIONS);
-  }   
+    $this->log(sprintf("in constructor\nopts = %s",print_r($this->options,true)));
+    // $this->check_plugin_version();  // may need to reintroduce this
+    $this->nav_slug = SGW_ADMIN_PAGE; // not 'amazon_bookstore' because this needs to map to dir name
+    $this->slug = 'support-great-writers'; // not 'amazon_bookstore' because this needs to map to dir name
+    // Sidebar configs
+    $this->plugin['home'] = 'https://wordpress.org/plugins/support-great-writers/';
+    $this->plugin['support'] = 'https://wordpress.org/support/plugin/support-great-writers';
+    $this->plugin['contact'] = 'mailto:wordpress@heypublisher.com';
+  }
 
   public function __destruct() {
-    // nothing to see yet
+    parent::__destruct();
   }
   public function activate_plugin() {
     $this->log("in the activate_plugin()");
     $this->check_plugin_version();
   }
+
+  // Primary action handler for page
+  function action_handler() {
+    parent::page('Amazon Book Store Settings', '', array($this,'content'));
+  }
+
   public function deactivate_plugin() {
     $this->options = false;
     delete_option(SGW_PLUGIN_OPTTIONS);  // remove the default options
 	  return;
   }
-  
+
   private function plugin_admin_url() {
     $url = 'options-general.php?page='.SGW_ADMIN_PAGE;
     return $url;
@@ -44,34 +64,15 @@ class SGW_Admin {
     array_unshift($links, $settings);  // push to left side
     return $links;
   }
-  
+
   // Filter for creating the link to settings
   public function plugin_filter() {
-    return sprintf('plugin_action_links_%s',SGW_PLUGIN_FILE); 
+    return sprintf('plugin_action_links_%s',SGW_PLUGIN_FILE);
   }
 
-	public function html_box_header($id, $title) {
-?>
-			<div id="<?php echo $id; ?>" class="postbox">
-				<h3 class="hndle"><span><?php echo $title ?></span></h3>
-				<div class="inside">
-<?php
-	}
-
-	public function html_box_footer() {
-?>
-				</div>
-			</div>
-<?php
-  }
-
-  public function sidebar_link($key,$link,$text) {
-    printf('<a class="sgw_button sgw_%s" href="%s" target="_blank">%s</a>',$key,$link,__($text,'sgw'));
-  }
-  
-  public function check_plugin_version() {
+    public function check_plugin_version() {
     $this->log("in check_plugin_version()");
-    
+
     $opts = get_option(SGW_PLUGIN_OPTTIONS);
     // printf("<pre>In check_plugin_version()\n opts = %s</pre>",print_r($opts,1));
     if (!$opts || !$opts[plugin] || $opts[plugin][version_last] == false) {
@@ -87,6 +88,13 @@ class SGW_Admin {
       $this->upgrade_plugin($opts);
       return;
     }
+  }
+
+  public function admin_stylesheets(){
+    wp_register_style( 'amznbs-heypublisher', plugins_url($this->slug . '/include/css/heypublisher.css' ) );
+    wp_register_style( 'amznbs-admin', plugins_url($this->slug . '/include/css/admin.css' ), array('amznbs-heypublisher') );
+    wp_enqueue_style('amznbs-heypublisher');
+    wp_enqueue_style('amznbs-admin');
   }
 
   // This is throw-away code.  Once we get everyone upgraded, this can be removed.
@@ -119,7 +127,7 @@ class SGW_Admin {
     // printf("<pre>In upgrade_plugin()\n ver = %s\nopts = %s</pre>",print_r($ver,1),print_r($this->options,1));
     if ($ver < 210) {
       $url = $this->plugin_admin_url();
-      // need to show the mesage about id changing 
+      // need to show the mesage about id changing
       // $html = '<div class="updated"><p>';
       // $html .= __( 'You will need to update your Amazon Associate ID <a href="'.$url.'">on the Settings page</a>.', 'sgw' );
       // echo $html;
@@ -165,7 +173,7 @@ class SGW_Admin {
   </div>
 <?php
   }
-  
+
 
 
   private function normalize_asin_list($list) {
@@ -193,11 +201,11 @@ class SGW_Admin {
   public function get_post_meta() {
     global $wpdb;
     $sql = sprintf("
-        SELECT wposts.post_title, wposts.ID, wpostmeta.meta_value 
+        SELECT wposts.post_title, wposts.ID, wpostmeta.meta_value
         FROM $wpdb->posts wposts, $wpdb->postmeta wpostmeta
-        WHERE wposts.ID = wpostmeta.post_id 
-        AND wpostmeta.meta_key = '%s' 
-        AND wposts.post_type = 'post' 
+        WHERE wposts.ID = wpostmeta.post_id
+        AND wpostmeta.meta_key = '%s'
+        AND wposts.post_type = 'post'
         ORDER BY wposts.post_title ASC", SGW_POST_META_KEY);
     if ($posts = $wpdb->get_results($sql, ARRAY_A)) {
       return $posts;
@@ -208,24 +216,20 @@ class SGW_Admin {
   public function truncate_string($str) {
     if (strlen($str)>40) {
       $str = substr($str,0,40) . '...';
-    } 
+    }
     return $str;
   }
 
   public function supported_countries() {
     $countries = array(
-      'us' => 'United States', 
-      'uk' => 'United Kingdon', 
-      'de' => 'Germany', 
-      'fr' => 'France', 
-      'ca' => 'Canada'
+      'ca' => 'Canada (amazon.ca)',
+      'fr' => 'France (amazon.fr)',
+      'de' => 'Germany (amazon.de)',
+      'it' => 'Italy (amazon.it)',
+      'es' => 'Spain (amazon.es)',
+      'co.uk' => 'United Kingdon (amazon.co.uk)',
+      'com' => 'United States (amazon.com)'
     );
-    // $countries = array(
-    //   'us' => 'amazon.com', 
-    //   'uk' => 'amazon.co.uk', 
-    //   'de' => 'amazon.de', 
-    //   'fr' => 'amazon.fr', 
-    //   'ca' => 'amazon.ca');
     return $countries;
   }
 
@@ -238,7 +242,7 @@ class SGW_Admin {
       check_admin_referer(SGW_ADMIN_PAGE_NONCE);
       if (isset($_POST['sgw_opt'])) {
         $opts = $_POST['sgw_opt'];
-        // printf("<pre>In update_options()\OPTS: %s\naction = %s</pre>",print_r($opts,1),$_REQUEST['action']); 
+        // printf("<pre>In update_options()\OPTS: %s\naction = %s</pre>",print_r($opts,1),$_REQUEST['action']);
         $this->options['affiliate_id'] = $opts['affiliate_id'];
         $this->options['country_id'] = $opts['country_id'];
         $this->options['default'] = SGW_BESTSELLERS;
@@ -273,8 +277,8 @@ class SGW_Admin {
               return false;
             }
           }
-        }          
-        
+        }
+
       }
       return $message;
     }
@@ -283,28 +287,48 @@ class SGW_Admin {
   public function configuration_screen_help($contextual_help, $screen_id, $screen) {
     if ($screen_id == $this->help) {
       $contextual_help = <<<EOF
-<h2>Overview</h2>      
-<p>You can sell any kind of Amazon product using this plugin.  To begin, you must first find the ASIN of the product(s) you want to sell.  See <a href="http://askville.amazon.com/find-Amazon-ASIN-product-details-page/AnswerViewer.do?requestId=11106037" target=_blank>How to Find Amazon ASINs</a> for more information.  You can input more than one ASIN - just seperate multiple values with a comma.
+<h2>Overview</h2>
+<p>
+You can sell any kind of Amazon product using this plugin.
+To begin, you must first find the ASIN of the product(s) you want to sell.
+</p>
+<p>See <a href="https://www.amazon.com/gp/help/customer/display.html?nodeId=200202190#find_asins" target='_blank'>How to Find Amazon ASINs</a> for more information.  You can input more than one ASIN - just seperate multiple values with a comma.
 </p>
 
 <h2>Settings</h2>
-<p>Input your Amazon Affiliate ID and select the approprite affiliate country.  Additionally, input a comma-separated list of ASINs for the products you want to display <i>by default</i> if a more specific list for an individual POST is not configured.  To get you started, we've pre-populated this field with two of the best-selling books currently on Amazon.</p>
+<p>
+  Select the approprite affiliate country and provide your Amazon Affiliate ID for that country.
+  You can also provide a comma-separated list of ASINs for the products you want to display <i>by default</i> if a more specific list for an individual POST is not configured.
+  To get you started, we have pre-populated this field with some of the best-selling books currently on Amazon.
+</p>
 
 <h2>POST-specific ASINs</h2>
-<p>Select a POST from the drop-down list and an input field will be added to the page where you can input the ASINs for the products you want displayed specifically on that page.  Alternatively, you can edit the POST directly, adding the custom field <code>$this->post_meta_key</code>.</p>
+<p>
+  Select a POST from the drop-down list and provide a comma-separated list of ASINs in the input field.
+<br/>
+  You can also edit the POST directly, adding the custom field <code>$this->post_meta_key</code> to the POST.
+</p>
 
 EOF;
     }
   	return $contextual_help;
   }
-  public function configuration_screen() {
+
+  public function content() {
+    $html = '';
     if (is_user_logged_in() && is_admin() ){
+
+//
+// <a target=_new href='{SGW_BASE_URL}images/flow.png' title='Click to see larger image'>
+//   <img src='{SGW_BASE_URL}images/flow_thumb.png'>
+// </a>
 
       $message = $this->update_options($_POST);
       $opts = get_option(SGW_PLUGIN_OPTTIONS);
       $posts = $this->get_post_meta();
       $existing = array();
 
+      // TODO: this should return - not print!
       if ($message) {
         printf('<div id="message" class="updated fade"><p>%s</p></div>',$message);
       } elseif ($this->error) { // reload the form post in this form
@@ -325,150 +349,99 @@ EOF;
     	if (!$opts['default']) {
     		$opts['default'] = SGW_BESTSELLERS;
     	}
-
-    ?>
-    <style type='text/css'>
-      a.sgw_PayPal {
-        background-image:url(<?php echo SGW_BASE_URL; ?>images/paypal.png);
+      $countries = $this->supported_countries();
+      $select = '';
+      foreach ($countries as $key=>$val) {
+        $sel = '';
+        if ($opts['country_id']==$key) { $sel = 'selected="selected"'; }
+        $select .= sprintf("<option value='%s' %s>%s</option>",$key,$sel,$val);
       }
-      a.sgw_Home {
-        background-image:url(<?php echo SGW_BASE_URL; ?>images/home.png);
+      $post_asins = '';
+      if ($posts) {
+        $post_asins .= '<ul>';
+        foreach ($posts as $id=>$hash) {
+          $existing[] = $hash['ID'];
+          $post_asins .= sprintf('<li><label class="sgw_label" for="sgw_posts_%s">%s</label><input type="text" name="sgw_opt[posts][%s]" id="sgw_posts_%s" class="sgw_input"  value="%s"/></li>',
+            $hash['ID'],$this->truncate_string($hash['post_title']),$hash['ID'],$hash['ID'],$hash['meta_value']);
+        }
+        $post_asins .= '</ul>';
       }
-      a.sgw_Suggestion {
-        background-image:url(<?php echo SGW_BASE_URL; ?>images/suggestion.png);
-      }
-      a.sgw_Contact {
-        background-image:url(<?php echo SGW_BASE_URL; ?>images/contact.png);
-      }
-    </style>
-
-        <div class="wrap">
-          <h2>Amazon Book Store Widget</h2>
-          <?php
-          if (!$message) {
-          ?>
-          <div class="updated">
-    				<p><strong>Thanks for using this plugin! If it works for you, <a href='<?php echo $this->donate_link; ?>' target='_blank'>please donate!</a> Donations help keep this plugin free for everyone to use.</strong></p>
-          </div>
-          <?php
+      $post_errors = '';
+      if ($this->error && @$_POST['sgw_opt']['new']) {
+        $post_errors .= '<ul>';
+        foreach ($_POST['sgw_opt']['new'] as $id=>$hash) {
+          if (!in_array($id,$existing)) { // this prevents successful saves from being re-listed
+            $existing[] = $id;
+            $post_errors .= sprintf('<br><label class="sgw_label" for="sgw_new[%s]">%s</label><input type="text" name="sgw_opt[new][%s][asin]" id="sgw_new_%s" class="sgw_input" value="%s"/><input type="hidden" name="sgw_opt[new][%s][title]" value="%s"/>',$id,$this->truncate_string($hash['post_title']),$id,$id,$hash['asin'],$id,$hash['title']);
           }
-          ?>
-          <div id="poststuff" class="metabox-holder has-right-sidebar">
-            <!-- Right Side -->
-    				<div class="inner-sidebar">
-    					<div id="side-sortables" class="meta-box-sortabless ui-sortable" style="position:relative;">
-                <?php 
-                  $this->html_box_header('sgw_about',__('About this Plugin','sgw'),true);
-                  // side bar elems
-                  $this->sidebar_link('PayPal',$this->donate_link,'Donate with PayPal'); 
-                  $this->sidebar_link('Home','https://wordpress.org/plugins/support-great-writers/','Plugin Homepage'); 
-                  $this->sidebar_link('Suggestion','https://wordpress.org/support/plugin/support-great-writers','Suggestions'); 
-                  $this->sidebar_link('Contact','mailto:wordpress@loudlever.com','Contact Us'); 
-              	  $this->html_box_footer(true); 
-              	?>  
-                <?php $this->html_box_header('sgw_how',__('How it Works','sgw'),true); ?>
-                    <a target=_new href='<?php echo SGW_BASE_URL; ?>images/flow.png' title='Click to see larger image'>
-                      <img src='<?php echo SGW_BASE_URL; ?>images/flow_thumb.png'>
-                    </a>
-              	<?php $this->html_box_footer(true); ?>  
-              </div>
-            </div>
-            <!-- Left Side -->
-            <div class="has-sidebar sm-padded">
-    					<div id="post-body-content" class="has-sidebar-content">
-    						<div class="meta-box-sortabless">
-                  <form method="post" action="admin.php?page=<?php echo SGW_ADMIN_PAGE; ?>">
-                    <?php
-                      if(function_exists('wp_nonce_field')){ wp_nonce_field(SGW_ADMIN_PAGE_NONCE); }
-                    ?>   
-                    <!-- Default Settings -->
-                    <?php $this->html_box_header('sgw_default_asins',__('Settings','sgw'),true); ?>
-      						  <p>Add the widget to your side-bar and configure which products you want to sell using the form below.</p>
+        }
+        $post_errors .= '</ul>';
+      }
+      $new_posts = '';
+      $post_list = get_posts(array('numberposts' => -1,'orderby' => 'title', 'order' => 'ASC' ));
+      foreach($post_list as $post) {
+        if (!in_array($post->ID,$existing)) {
+          $new_posts .= sprintf('<option value="%s">%s</option>',$post->ID,$post->post_title);
+        }
+      }
 
-                      <p>
-                        <label class='sgw_label' for='sgw_affiliate_id'>Affiliate ID:</label>
-                        <input type="text" name="sgw_opt[affiliate_id]" id="affiliate_id" class='sgw_input' value="<?php echo  $opts['affiliate_id']; ?>" />
-                      </p>
-                      <p>
-                        <label class='sgw_label' for='country_id'>Affiliate Country:</label>
-                        <select name="sgw_opt[country_id]" id="country_id" class='sgw_input'>
-                          <?php
-                            $countries = $this->supported_countries();
-                            foreach ($countries as $key=>$val) {
-                              $sel = '';
-                              if ($opts['country_id']==$key) { $sel = 'selected="selected"'; }
-                              printf("<option value='%s' %s>%s</option>",$key,$sel,$val);
-                            }
-                          ?>          
-                        </select>
-                      </p>
-
-                      <p>
-                        <label class='sgw_label' for='sgw_default_asins'>Default ASINs:</label>
-                        <input type="text" name="sgw_opt[default]" id="sgw_default" class='sgw_input' value="<?php echo  $opts['default']; ?>" />
-                        <input type="hidden" name="save_settings" value="1" />
-                      </p>
-                    <?php $this->html_box_footer(true); ?>  
-                    <?php $this->html_box_header('sgw_post_asins',__('POST-specific ASINs','sgw'),true); ?>
-                      <p>If you want specific products to display on individual pages, add those product ASINs here.  Select the POST from the drop-down list below then input the desired ASINs as a comma-separated list.  You can add as many or as few as you like.  You can also set the ASINs in the Post Edit page by using the custom field <code><?php echo $this->post_meta_key; ?></code>.</p>
-                      <?php
-                        if ($posts) {
-                          foreach ($posts as $id=>$hash) {
-                            $existing[] = $hash['ID'];
-                            printf('<br/><label class="sgw_label" for="sgw_posts_%s">%s</label><input type="text" name="sgw_opt[posts][%s]" id="sgw_posts_%s" class="sgw_input"  value="%s"/>',
-                              $hash['ID'],$this->truncate_string($hash['post_title']),$hash['ID'],$hash['ID'],$hash['meta_value']);
-                          }
-                        }
-                        // conditional test - if we had errors - reprint out the 'new' vals
-                        if ($this->error && @$_POST['sgw_opt']['new']) { 
-                          foreach ($_POST['sgw_opt']['new'] as $id=>$hash) {
-                            if (!in_array($id,$existing)) { // this prevents successful saves from being re-listed
-                              $existing[] = $id;
-                              printf('<br><label class="sgw_label" for="sgw_new[%s]">%s</label><input type="text" name="sgw_opt[new][%s][asin]" id="sgw_new_%s" class="sgw_input" value="%s"/><input type="hidden" name="sgw_opt[new][%s][title]" value="%s"/>',$id,$this->truncate_string($hash['post_title']),$id,$id,$hash['asin'],$id,$hash['title']);
-                            }
-                          }
-                        }
-
-                      ?>  
-                      <br/>
-                      <!-- placeholder for where new entries are put -->
-                      <div id="newly_added_post_asins"></div>
-                      <label class='sgw_label add_new' for='sgw_add_new'>Add New Post ASINs:</label>
-                      <select name="sgw_opt[list_all]" id="sgw_add_new" class='sgw_input' onchange='sgw.append_asin_block(this.value);'/>
-                        <option value='0' selected='selected'>-- Select --</option>
-                        <?php
-                          $post_list = get_posts(array('numberposts' => -1,'orderby' => 'title', 'order' => 'ASC' ));
-                          foreach($post_list as $post) {
-                            if (!in_array($post->ID,$existing)) {
-                              printf('<option value="%s">%s</option>',$post->ID,$post->post_title);
-                            }
-                          }
-                        ?>
-                      </select>
-                  	<?php $this->html_box_footer(true); ?>  
-                    <input type="submit" class="button-primary" name="save_button" value="<?php _e('Update Settings', 'sgw'); ?>" />
-      	          </form>
-                </div>
-              </div>
-            </div>
-        </div>
-      </div>
-    <?php
-
+      $nonce = wp_nonce_field(SGW_ADMIN_PAGE_NONCE);
+      $html =<<< EOF
+      <form method="post" action="admin.php?page={$this->nav_slug}">
+        {$nonce}
+  			<p>Add the widget to your side-bar and configure which products you want to sell using the form below.</p>
+        <ul>
+          <li>
+            <label class='sgw_label' for='amznbs_country_id'>Affiliate Country</label>
+            <select name="sgw_opt[country_id]" id="amznbs_country_id" class='sgw_input'>
+              {$select}
+            </select>
+            <a id='sgw_domain' class='sgw_domain' href='#' title='Signup for an Amazon Affiliate account' target='_blank'>
+              <span class="dashicons dashicons-external"></span>
+            </a>
+          </li>
+          <li>
+            <label class='sgw_label' for='sgw_affiliate_id'>Affiliate ID</label>
+            <input type="text" name="sgw_opt[affiliate_id]" id="sgw_affiliate_id" class='sgw_input' value="{$opts['affiliate_id']}" />
+          </li>
+          <li>
+            <label class='sgw_label' for='sgw_default_asins'>Default ASINs:</label>
+            <input type="text" name="sgw_opt[default]" id="sgw_default" class='sgw_input' value="{$opts['default']}" />
+            <input type="hidden" name="save_settings" value="1" />
+          </li>
+        </ul>
+        <p>
+          If you want specific products to display on individual pages, add those product ASINs here.
+          Select the POST from the drop-down list below then input the desired ASINs as a
+          comma-separated list.  You can add as many or as few as you like.
+          You can also set the ASINs in the Post Edit page by using the custom field
+          <code>{$this->post_meta_key}</code>.
+        </p>
+        {$post_asins}
+        {$post_errors}
+        <!-- placeholder for where new entries are put -->
+        <div id="newly_added_post_asins"></div>
+        <ul>
+          <li>
+            <label class='sgw_label add_new' for='sgw_add_new'>Add New Post ASINs</label>
+            <select name="sgw_opt[list_all]" id="sgw_add_new" class='sgw_input' onchange='sgw.append_asin_block(this.value);'/>
+              <option value='0' selected='selected'>-- Select --</option>
+              {$new_posts}
+            </select>
+          </li>
+        </ul>
+        <input type="submit" class="button-primary" name="save_button" value="Update Settings" />
+  	  </form>
+EOF;
     }
-    
-  }
-  private function log($msg) {
-    if (SGW_DEBUG) {
-      error_log(sprintf("%s\n",$msg),3,dirname(__FILE__) . '/../../error.log');
-    }
+    return $html;
   }
   private function missing_affiliate_id() {
-?>    
+?>
     <div id="affiliate_id_message" class="update-nag">
       <p>Though this plugin will work without one, until you input your Affiliate ID you will not get credit for sales made from the widget.</p>
     </div>
-<?php  
+<?php
   }
 }
 ?>

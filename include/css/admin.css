@@ -57,3 +57,10 @@ a.sgw_button {
 a.sgw_button:hover {
 	border-bottom-width:1px;
 }
+a.sgw_domain {
+  font-weight: lighter;
+  text-decoration: none;
+}
+a.sgw_domain .dashicons {
+  font-size: 2.0em;
+}
