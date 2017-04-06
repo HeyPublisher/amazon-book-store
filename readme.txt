@@ -51,7 +51,7 @@ If you wish to make a donation, please consider donating instead to the [Literar
 == Changelog ==
 
 = 2.2.0 =
-* Released: 2017-04-10
+* Released: 2017-04-05
 * This plugin is now maintained by [HeyPublisher](https://www.heypublisher.com)
 * Cleaned out a bunch of the kruft
 * Standardized the plugin layout using HeyPublisher plugin framework
