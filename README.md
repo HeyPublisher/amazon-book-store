@@ -45,9 +45,12 @@ Yes.  Absolutely.  The widget will keep track of which products have already bee
 
 1. Widget displayed in the Widget manager.
 ![image](https://github.com/aguywithanidea/amazon-book-store/blob/master/screenshot-1.jpg?raw=true)
+
 2. Widget displayed in the Side-Bar (your styling may differ)
-![image](https://github.com/aguywithanidea/amazon-book-store/blob/master/screenshot-2.jpg)
+![image](https://github.com/aguywithanidea/amazon-book-store/blob/master/screenshot-2.jpg?raw=true)
+
 3. Widget process flow, illustrating how the products are selected for display
-![image](https://github.com/aguywithanidea/amazon-book-store/blob/master/screenshot-3.jpg)
+![image](https://github.com/aguywithanidea/amazon-book-store/blob/master/screenshot-3.jpg?raw=true)
+
 4. ASIN configuration for POSTs and for Default pool
-![image](https://github.com/aguywithanidea/amazon-book-store/blob/master/screenshot-4.jpg)
+![image](https://github.com/aguywithanidea/amazon-book-store/blob/master/screenshot-4.jpg?raw=true)
