@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: affiliate, amazon, product, book store, affiliate sales,ASIN, Amazon Associate, monetize, heypublisher
 Requires at least: 4.0
 Tested up to: 4.7.3
-Stable tag: 2.2.0
+Stable tag: 2.2.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -49,6 +49,10 @@ If you wish to make a donation, please consider donating instead to the [Literar
 4. ASIN configuration for POSTs and for Default pool
 
 == Changelog ==
+
+= 2.2.1 =
+* Released: 2017-05-27
+* Fixed an issue where affiliate code would not stick if changing from any international affiliate country back to US.
 
 = 2.2.0 =
 * Released: 2017-04-05

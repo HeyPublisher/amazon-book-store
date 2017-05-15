@@ -6,7 +6,7 @@
 class SupportGreatWriters extends WP_Widget {
   var $seen = array();
   var $options = array();
-  var $asins = array();  
+  var $asins = array();
 
 
 	function __construct() {
@@ -19,12 +19,15 @@ class SupportGreatWriters extends WP_Widget {
   // Get the amazon link for a passed-in ASIN and Associates ID
   function get_amazon_link($asin,$assoc,$country) {
     $url_map = array(
-      'us' => 'amazon.com', 
-      'uk' => 'amazon.co.uk', 
-      'de' => 'amazon.de', 
-      'fr' => 'amazon.fr', 
-      'ca' => 'amazon.ca');
-    
+      'com'     => 'amazon.com',
+      'co.uk'   => 'amazon.co.uk',
+      'de'      => 'amazon.de',
+      'fr'      => 'amazon.fr',
+      'ca'      => 'amazon.ca',
+      'it'      => 'amazon.it',
+      'es'      => 'amazon.es'
+    );
+
     if (!$asin) {
       // display default image
       $link = sprintf('<img src="%s" title="Product ASIN not defined">',SGW_DEFAULT_IMAGE);
@@ -49,7 +52,7 @@ class SupportGreatWriters extends WP_Widget {
   public function load_asins() {
 	  global $post; // this is only available within the widget function, not within the constructor
     $list = '';
-    if (!is_home()) { 
+    if (!is_home()) {
       // look to see if we have a post id meta attribute
   	  $list = get_post_meta($post->ID,SGW_POST_META_KEY,true);
   	  $this->asins = array_merge($this->asins,$this->shuffle_asin_list($list));
@@ -73,7 +76,7 @@ class SupportGreatWriters extends WP_Widget {
     return $asins;
   }
 
-  // @see WP_Widget::widget 
+  // @see WP_Widget::widget
 	function widget($args, $instance) {
 	  $this->load_asins();
 		// outputs the content of the widget
@@ -87,11 +90,11 @@ class SupportGreatWriters extends WP_Widget {
     $country = $this->options['country_id'];
     if (!$affiliate) { $affiliate = 'sgw-1-2-2-20'; $country = 'us'; } // set a default so plugin doesn't stop working
     $asins = $this->get_next_asin_set($display_count);
-    if ($asins) { 
+    if ($asins) {
       // start the output
-      echo $before_widget; 
+      echo $before_widget;
       if ( $title ) {
-        echo $before_title . $title . $after_title; 
+        echo $before_title . $title . $after_title;
       }
 ?>
 <div class="textwidget">
@@ -109,7 +112,7 @@ class SupportGreatWriters extends WP_Widget {
 </tr></table>
 </div>
 <?php
-    echo $after_widget; 
+    echo $after_widget;
     } // end of test if count is greater than desired display
 	}
 
@@ -119,7 +122,7 @@ class SupportGreatWriters extends WP_Widget {
 	}
 
 	// outputs the options form on admin
-  // @see WP_Widget::form 
+  // @see WP_Widget::form
 	function form($instance) {
     // load the vars
     $title = esc_attr($instance['title']);
@@ -139,12 +142,12 @@ class SupportGreatWriters extends WP_Widget {
             if ($display_count==$i) { $sel = 'selected="selected"'; }
             printf("<option value='%s' %s>%s</option>",$i,$sel, $i);
           }
-?>          
+?>
           </select>
           </label>
         </p>
-          
-<?php           
-          
+
+<?php
+
 	}
 } // end class
