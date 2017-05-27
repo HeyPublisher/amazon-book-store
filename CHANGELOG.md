@@ -1,5 +1,9 @@
 ### Changelog
 
+#### 2.2.1
+* Released: 2017-05-27
+* Fixed an issue where affiliate code would not stick if changing from any international affiliate country back to US.
+
 #### 2.2.0
 * Released: 2017-04-10
 * This plugin is now maintained by [HeyPublisher](https://www.heypublisher.com)
