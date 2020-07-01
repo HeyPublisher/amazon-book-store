@@ -8,7 +8,7 @@ Requires at least: 4.0
 Tested up to: 4.7.3
 Stable tag: 2.2.1
 License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 ```
 
 Sell Amazon products in sidebar widgets, unique to the individual POST or generically from a default pool of products that you define.
@@ -31,7 +31,7 @@ Install the plugin, then activate it.  Once activated, configure the Widget:
 
 **Configure the ASIN pool**
 
-Navigate to 'Settings' -> 'Amazon Book Store'.  Input your Amazon Affiliate ID and country, the add the ASINs for the products you want to be displayed in the widget.  See [How to Find Amazon ASINs](http://askville.amazon.com/find-Amazon-ASIN-product-details-page/AnswerViewer.do?requestId=11106037) for more information.  There are two categorizations of settings:
+Navigate to 'Settings' -> 'Amazon Book Store'.  Input your Amazon Affiliate ID and country, the add the ASINs for the products you want to be displayed in the widget.  See [How to Find Amazon ASINs](https://www.amazon.com/gp/seller/asin-upc-isbn-info.html) for more information.  There are two categorizations of settings:
 
 * POST Specific:  When set, these products will be offered for sale when users read the associated POST.
 * Default: If the request is to a POST that does not have specific ASINs defined, the widget will display products from this group.

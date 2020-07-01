@@ -55,7 +55,7 @@
 
 #### 1.0.1
 * Updated screenshots to highlight the fact that users should change their Amazon Associate ID.
-* Plugin is now owned and maintained by [Loudlever, Inc.](http://www.loudlever.com)
+* Plugin is now owned and maintained by [Loudlever, Inc.](https://www.loudlever.com)
 * Update Release (03/26/2010)
 
 #### 1.0

@@ -5,11 +5,11 @@ Plugin URI: https://wordpress.org/plugins/support-great-writers/
 Description: Sell Amazon products in sidebar widgets, unique to the individual POST or generically from a default pool of products that you define.
 Author: HeyPublisher
 Author URI: https://www.heypublisher.com
-Version: 2.2.1
+Version: 3.0.0
 
   Copyright 2009-2014 Loudlever (wordpress@loudlever.com)
   Copyright 2014-2017 Richard Luck (https://github.com/aguywithanidea/)
-  Copyright 2017 HeyPublisher (https://www.heypublisher.com/)
+  Copyright 2017-2020 HeyPublisher (https://www.heypublisher.com/)
 
   Permission is hereby granted, free of charge, to any person
   obtaining a copy of this software and associated documentation
@@ -45,9 +45,16 @@ if ( !function_exists( 'add_action' ) ) {
   OPTION SETTINGS
 ---------------------------------------------------------------------------------
 */
+global $HEYPUB_LOGGER;
 
-define('SGW_DEBUG',false);
-define('SGW_PLUGIN_VERSION', '2.2.1');
+$debug = (getenv('HEYPUB_DEBUG') === 'true');
+if ($debug) {
+  define('SGW_DEBUG',true);
+} else {
+  define('SGW_DEBUG',false);
+}
+
+define('SGW_PLUGIN_VERSION', '3.0.0');
 define('SGW_PLUGIN_OPTTIONS', '_sgw_plugin_options');
 define('SGW_BASE_URL', get_option('siteurl').'/wp-content/plugins/support-great-writers/');
 define('SGW_DEFAULT_IMAGE', get_option('siteurl').'/wp-content/plugins/support-great-writers/images/not_found.gif');
@@ -57,6 +64,11 @@ define('SGW_ADMIN_PAGE_NONCE','sgw-save-options');
 define('SGW_PLUGIN_ERROR_CONTACT','Please contact <a href="mailto:wordpress@heypublisher.com?subject=Amazon%20Bookstore%20Widget">wordpress@heypublisher.com</a> if you have any questions');
 define('SGW_BESTSELLERS','1455570249,144947425X,1501164589,0692859055');
 define('SGW_PLUGIN_FILE',plugin_basename(__FILE__));
+define('SGW_PLUGIN_FULLPATH', dirname(__FILE__));
+
+if (!class_exists("\HeyPublisher\Base\Log")) {
+  require_once(SGW_PLUGIN_FULLPATH . '/include/classes/HeyPublisher/Base/Log.class.php');
+}
 
 require_once(dirname(__FILE__) . '/include/classes/SGW_Widget.class.php');
 require_once(dirname( __FILE__ ) . '/include/classes/AMZNBS/Admin.class.php');

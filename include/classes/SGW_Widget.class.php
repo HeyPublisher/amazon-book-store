@@ -1,15 +1,18 @@
 <?php
 /*
   Widget Class
-  http://codex.wordpress.org/Widgets_API
+  https://codex.wordpress.org/Widgets_API
 */
 class SupportGreatWriters extends WP_Widget {
   var $seen = array();
   var $options = array();
   var $asins = array();
-
+  var $logger = null;
 
 	function __construct() {
+    global $HEYPUB_LOGGER;
+    $this->logger = $HEYPUB_LOGGER;
+    $this->logger->debug("SupportGreatWriters");
 		$control_ops = array( 'id_base' => 'sgw' );
 		$widget_ops = array('description' => __('Easily sell Amazon books or other products in sidebar.','sgw'));
 		$this->options = get_option(SGW_PLUGIN_OPTTIONS);
@@ -17,6 +20,8 @@ class SupportGreatWriters extends WP_Widget {
 	}
 
   // Get the amazon link for a passed-in ASIN and Associates ID
+  // TODO: switch this to calling HeyPublisher.com server to get data, as the
+  // secure URL for images can only be calculated using application key and secret
   function get_amazon_link($asin,$assoc,$country) {
     $url_map = array(
       'com'     => 'amazon.com',
@@ -32,7 +37,7 @@ class SupportGreatWriters extends WP_Widget {
       // display default image
       $link = sprintf('<img src="%s" title="Product ASIN not defined">',SGW_DEFAULT_IMAGE);
     } else {
-      $format = '<a title="Click for more Information" target=_blank href="http://www.%s/gp/product/%s?ie=UTF8&tag=%s&linkCode=as2&camp=1789&creative=9325&creativeASIN=%s"><img class="sgw_product_img" src="http://ecx.images-amazon.com/images/P/%s.01._SCMZZZZZZZ_.jpg"></a><img src="http://www.assoc-%s/e/ir?t=%s&l=as2&o=1&a=%s" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />';
+      $format = '<a title="Click for more Information" target=_blank href="https://www.%s/gp/product/%s?ie=UTF8&tag=%s&linkCode=as2&camp=1789&creative=9325&creativeASIN=%s"><img class="sgw_product_img" src="http://ecx.images-amazon.com/images/P/%s.01._SCMZZZZZZZ_.jpg"></a><img src="https://www.assoc-%s/e/ir?t=%s&l=as2&o=1&a=%s" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />';
       $link = sprintf($format,$url_map[$country],$asin,$assoc,$asin,$asin,$url_map[$country],$assoc,$asin);
     }
     return $link;
@@ -40,9 +45,10 @@ class SupportGreatWriters extends WP_Widget {
 
   // Split a comma-separated list of asins apart and return an array of POST or DEFAULT asins for display.
   private function shuffle_asin_list($list) {
+    $this->logger->debug(sprintf("\tshuffle_asin_list : \n\t\$list = %s",print_r($list,1)));
     $asins = array();
     if ($list) {
-  	  $array = split(',',$list);
+  	  $array = explode(',',$list);
   	  shuffle($array);
       return $array;
     }

@@ -1,5 +1,6 @@
 <?php
 namespace AMZNBS;
+
 /*
   Admin Class
 
@@ -24,21 +25,22 @@ class Admin extends \HeyPublisher\Base {
   public function __construct() {
     parent::__construct();
     $this->options = get_option(SGW_PLUGIN_OPTTIONS);
-    $this->log(sprintf("in constructor\nopts = %s",print_r($this->options,true)));
+    $this->logger->debug(sprintf("in constructor\nopts = %s",print_r($this->options,true)));
     // $this->check_plugin_version();  // may need to reintroduce this
     $this->nav_slug = SGW_ADMIN_PAGE; // not 'amazon_bookstore' because this needs to map to dir name
     $this->slug = 'support-great-writers'; // not 'amazon_bookstore' because this needs to map to dir name
     // Sidebar configs
-    $this->plugin['home'] = 'https://wordpress.org/plugins/support-great-writers/';
-    $this->plugin['support'] = 'https://wordpress.org/support/plugin/support-great-writers';
+    $this->plugin['home'] = 'https://github.com/HeyPublisher/amazon-book-store';
+    $this->plugin['support'] = 'https://github.com/HeyPublisher/amazon-book-store/issues';
     $this->plugin['contact'] = 'mailto:wordpress@heypublisher.com';
+    $this->plugin['more'] = 'https://github.com/HeyPublisher/';
   }
 
   public function __destruct() {
     parent::__destruct();
   }
   public function activate_plugin() {
-    $this->log("in the activate_plugin()");
+    $this->logger->debug("in the activate_plugin()");
     $this->check_plugin_version();
   }
 
@@ -71,12 +73,12 @@ class Admin extends \HeyPublisher\Base {
   }
 
     public function check_plugin_version() {
-    $this->log("in check_plugin_version()");
+    $this->logger->debug("in check_plugin_version()");
 
     $opts = get_option(SGW_PLUGIN_OPTTIONS);
     // printf("<pre>In check_plugin_version()\n opts = %s</pre>",print_r($opts,1));
     if (!$opts || !$opts[plugin] || $opts[plugin][version_last] == false) {
-      $this->log("no old version - initializing");
+      $this->logger->debug("no old version - initializing");
       $this->init_plugin();
       // there is a possible upgrade path from old widget to this one - in which case we want to migrate data
       $this->migrate_old_widget();
@@ -84,7 +86,7 @@ class Admin extends \HeyPublisher\Base {
     }
     // check for upgrade option here
     if ($opts[plugin][version_current] != SGW_PLUGIN_VERSION) {
-      $this->log("need to upgrade version");
+      $this->logger->debug("need to upgrade version");
       $this->upgrade_plugin($opts);
       return;
     }
@@ -182,7 +184,7 @@ class Admin extends \HeyPublisher\Base {
       // $this->error = 'You must input at least one ASIN'; return false;
     }
     $new = array();
-    $array = split(',',$list);
+    $array = explode(',',$list);
     foreach ($array as $asin) {
       $x = trim($asin);
       if (strlen($x) != 10) {

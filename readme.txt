@@ -3,10 +3,10 @@ Contributors: heypublisher, aguywithanidea, loudlever
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Y8SL68GN5J2PL
 Tags: affiliate, amazon, product, book store, affiliate sales,ASIN, Amazon Associate, monetize, heypublisher
 Requires at least: 4.0
-Tested up to: 4.7.3
-Stable tag: 2.2.1
+Tested up to: 5.3.0
+Stable tag: 3.0.0
 License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 Sell Amazon products in sidebar widgets, unique to the individual POST or generically from a default pool of products that you define.
 
@@ -28,7 +28,7 @@ Install the plugin, then activate it.  Once activated, configure the Widget:
 
 **Configure the ASIN pool**
 
-Navigate to 'Settings' -> 'Amazon Book Store'.  Input your Amazon Affiliate ID and country, the add the ASINs for the products you want to be displayed in the widget.  See [How to Find Amazon ASINs](http://askville.amazon.com/find-Amazon-ASIN-product-details-page/AnswerViewer.do?requestId=11106037) for more information.  There are two categorizations of settings:
+Navigate to 'Settings' -> 'Amazon Book Store'.  Input your Amazon Affiliate ID and country, the add the ASINs for the products you want to be displayed in the widget.  See [How to Find Amazon ASINs](https://www.amazon.com/gp/seller/asin-upc-isbn-info.html) for more information.  There are two categorizations of settings:
 
 * POST Specific:  If set, these products will be displayed when users are reading the designated POST.
 * Default: If the request is to a POST that does not have specific ASINs defined, then the widget will display products from this group.
@@ -49,6 +49,12 @@ If you wish to make a donation, please consider donating instead to the [Literar
 4. ASIN configuration for POSTs and for Default pool
 
 == Changelog ==
+
+= 3.0.0 =
+* Released: 2020-06-29
+* Plugin is now hosted on [GitHub](https://github.com/HeyPublisher/amazon-book-store)
+* Fixed issue with call to function `split` not being found in PHP versions 7.0 and above.
+
 
 = 2.2.1 =
 * Released: 2017-05-27
@@ -105,7 +111,7 @@ If you wish to make a donation, please consider donating instead to the [Literar
 
 = 1.0.1 =
 * Updated screenshots to highlight the fact that users should change their Amazon Associate ID.
-* Plugin is now owned and maintained by [Loudlever, Inc.](http://www.loudlever.com)
+* Plugin is now owned and maintained by [Loudlever, Inc.](https://www.loudlever.com)
 * Update Release (03/26/2010)
 
 = 1.0 =
