@@ -22,7 +22,7 @@ if(preg_match('#' . basename(__FILE__) . '#', $_SERVER['PHP_SELF'])) { die('HeyP
 // $hp_updater->set_username( 'NOt-HeyPublisher' ); // Only use this setter if plugin not hosted by 'HeyPublisher'
 // $hp_updater->set_repository( 'this-plugin-repo' ); // set repo
 // $hp_updater->initialize('vesion-tested'); // initialize the updater.
-// 
+//
 // The 'version-tested' is a string that allows you to display through which
 // version of WordPress this plugin has been tested through.
 // If the user's version is greater  than this version, they will get a
@@ -151,8 +151,8 @@ class Updater {
 					'slug'				=> $this->basename,
 					'requires'		=> $this->plugin["RequiresWP"],
 					'tested'			=> $this->tested_to,
-					'rating'			=> '90.0',
-					'num_ratings'	=> '23',
+					// 'rating'			=> '90.0',  /// need to figure out how to get this from github
+					// 'num_ratings'	=> '23',  /// need to figure out how to get this from github
 					'downloaded'	=> '8669',
 					'added'				=> '2016-01-05',
 					'version'			=> $this->github_response['tag_name'],
