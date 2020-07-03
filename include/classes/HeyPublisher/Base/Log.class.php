@@ -1,6 +1,6 @@
 <?php
 // Generic logging class.
-// Should be instantiated: $this->logger = new \NAMESPACE\HeyPublisher\Log('file.log');
+// Should be instantiated: $this->logger = new \HeyPublisher\Base\Log('file.log');
 // Then send logs: $this->logger->debug("message"); and it will be written to 'file.log'
 
 namespace HeyPublisher\Base;
@@ -8,7 +8,8 @@ namespace HeyPublisher\Base;
 if(preg_match('#' . basename(__FILE__) . '#', $_SERVER['PHP_SELF'])) { die('HeyPublisher: Illegal Page Call!'); }
 
 // Logging class for all HeyPublisher plugins.
-// Should be instantiated in main plugin file using global var $HEYPUB_LOGGER
+// This class is instantiated automatically when loaded and will be accessible
+// via the global $HEYPUB_LOGGER
 class Log {
   var $enable = false;
   var $log_file = '';
