@@ -1,16 +1,5 @@
 ## Amazon Book Store
 
-```
-Contributors: heypublisher, aguywithanidea, loudlever
-Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Y8SL68GN5J2PL
-Tags: affiliate, amazon, product, book store, affiliate sales,ASIN, Amazon Associate, monetize, heypublisher
-Requires at least: 4.0
-Tested up to: 4.7.3
-Stable tag: 2.2.1
-License: GPLv2 or later
-License URI: https://www.gnu.org/licenses/gpl-2.0.html
-```
-
 Sell Amazon products in sidebar widgets, unique to the individual POST or generically from a default pool of products that you define.
 
 ### Description

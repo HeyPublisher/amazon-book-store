@@ -5,7 +5,7 @@ Plugin URI: https://wordpress.org/plugins/support-great-writers/
 Description: Sell Amazon products in sidebar widgets, unique to the individual POST or generically from a default pool of products that you define.
 Author: HeyPublisher
 Author URI: https://www.heypublisher.com
-Version: 2.1.0
+Version: 3.0.0
 Requires at least: 5.0
 
   Copyright 2009-2014 Loudlever (wordpress@loudlever.com)
