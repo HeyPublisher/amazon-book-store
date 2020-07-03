@@ -1,5 +1,13 @@
 ### Changelog
 
+#### 3.0.0
+* Released: 2020-07-03
+* Plugin is now hosted on [GitHub](https://github.com/HeyPublisher/amazon-book-store)
+* Fixed issue with call to function `split` not being found in PHP versions 7.0 and above.
+* Added an updater that will check GitHub for latest version and update locally.
+* Organized code around HeyPublisher/Base class
+* Validated plugin works up through WordPress 5.3
+
 #### 2.2.1
 * Released: 2017-05-27
 * Fixed an issue where affiliate code would not stick if changing from any international affiliate country back to US.
@@ -55,7 +63,7 @@
 
 #### 1.0.1
 * Updated screenshots to highlight the fact that users should change their Amazon Associate ID.
-* Plugin is now owned and maintained by [Loudlever, Inc.](http://www.loudlever.com)
+* Plugin is now owned and maintained by [Loudlever, Inc.](https://www.loudlever.com)
 * Update Release (03/26/2010)
 
 #### 1.0

@@ -1,6 +1,10 @@
 <?php
 namespace HeyPublisher;
 
+if (!class_exists("\HeyPublisher\Base\Log")) {
+  require_once(SGW_PLUGIN_FULLPATH . '/include/classes/HeyPublisher/Base/Log.class.php');
+}
+
 if(preg_match('#' . basename(__FILE__) . '#', $_SERVER['PHP_SELF'])) { die('HeyPublisher: Illegal Page Call!'); }
 
 /**
@@ -9,9 +13,9 @@ if(preg_match('#' . basename(__FILE__) . '#', $_SERVER['PHP_SELF'])) { die('HeyP
 */
 class Base {
   var $debug = true;
+  var $logger = null;
   var $help = false;
   var $i18n = 'heypublisher';  // key for internationalization stubs
-  var $log_file = '';
   var $plugin = array(
     'url' => 'https://www.heypublisher.com',
     'home' => 'https://wordpress.org/plugins/',
@@ -22,9 +26,11 @@ class Base {
   var $slug = '';   // should be defined in constructor of any class that extends this class.
 
   public function __construct() {
+    global $HEYPUB_LOGGER;
     // this can't be instantiated in var declaration
     // $this->plugin['url'] = plugins_url('../../',__FILE__);
-    $this->log_file = dirname( __FILE__ ) . '/../../../error.log';
+    $this->logger = $HEYPUB_LOGGER;
+    $this->logger->debug("HeyPublisher::Base loaded");
   }
 
   public function __destruct() {
@@ -59,15 +65,6 @@ EOF;
 EOF;
     return $text;
 	}
-
-  /**
-   * Logging function
-   */
-  public function log($msg) {
-    if ($this->debug && $this->log_file) {
-      error_log(sprintf("%s\n",$msg),3,$this->log_file);
-    }
-  }
 
   /**
    * Style the side-bar link appropriately
