@@ -8,7 +8,7 @@ namespace AMZNBS;
 
 */
 if (!class_exists('\HeyPublisher\Base')) {
-  load_template(dirname( __FILE__ ) . '/../HeyPublisher/Base.class.php');
+  require_once( dirname(__FILE__) . '/../HeyPublisher/Base.class.php');
 }
 class Admin extends \HeyPublisher\Base {
 
@@ -414,8 +414,12 @@ EOF;
         </ul>
         <p>
           If you want specific products to display on individual pages, add those product ASINs here.
+        </p>
+        <p>
           Select the POST from the drop-down list below then input the desired ASINs as a
           comma-separated list.  You can add as many or as few as you like.
+        </p>
+        <p>
           You can also set the ASINs in the Post Edit page by using the custom field
           <code>{$this->post_meta_key}</code>.
         </p>

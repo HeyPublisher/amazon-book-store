@@ -2,7 +2,7 @@
 namespace HeyPublisher;
 
 if (!class_exists("\HeyPublisher\Base\Log")) {
-  require_once(SGW_PLUGIN_FULLPATH . '/include/classes/HeyPublisher/Base/Log.class.php');
+  require_once( dirname(__FILE__) . '/Base/Log.class.php');
 }
 
 if(preg_match('#' . basename(__FILE__) . '#', $_SERVER['PHP_SELF'])) { die('HeyPublisher: Illegal Page Call!'); }
