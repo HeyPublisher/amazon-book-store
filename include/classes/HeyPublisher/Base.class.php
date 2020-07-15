@@ -12,7 +12,6 @@ if(preg_match('#' . basename(__FILE__) . '#', $_SERVER['PHP_SELF'])) { die('HeyP
 *
 */
 class Base {
-  var $debug = true;
   var $logger = null;
   var $help = false;
   var $i18n = 'heypublisher';  // key for internationalization stubs

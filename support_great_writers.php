@@ -75,6 +75,9 @@ define('SGW_PLUGIN_FULLPATH', dirname(__FILE__));
 if (!class_exists("\HeyPublisher\Base\Log")) {
   require_once(SGW_PLUGIN_FULLPATH . '/include/classes/HeyPublisher/Base/Log.class.php');
 }
+if (!class_exists("\HeyPublisher\Base\API")) {
+  require_once(SGW_PLUGIN_FULLPATH . '/include/classes/HeyPublisher/Base/API.class.php');
+}
 if (!class_exists("\HeyPublisher\Base\Updater")) {
   require_once(SGW_PLUGIN_FULLPATH . '/include/classes/HeyPublisher/Base/Updater.class.php');
 }
