@@ -13,12 +13,12 @@ if(preg_match('#' . basename(__FILE__) . '#', $_SERVER['PHP_SELF'])) { die('HeyP
   // via the global $HEYPUB_LOGGER
 
 class API {
-  var $api = HEYPUB_API;
-  var $error = false;
+  var $api   = null;
+  var $error  = false;
   var $timeout = 4;
   var $config = null;
-  var $uoid = '';
-  var $poid = '';
+  var $uoid   = null;
+  var $poid   = null;
 
   public function __construct() {
     // TODO: to make this generic, the uoid and poid need to be dynamic
@@ -26,7 +26,7 @@ class API {
     global $HEYPUB_LOGGER;
     $this->logger = $HEYPUB_LOGGER;
     $this->logger->debug("HeyPublisher::API loaded");
-    // Load the uoid and poid into memory
+    $this->initialize_api_url();
     $this->initialize_oids();
     register_shutdown_function(array($this,'shutdown'));
   }
@@ -211,6 +211,18 @@ class API {
     }
     return $tmp;
   }
+  // Set the API URL depending on whether we're in dev or prod
+  private function initialize_api_url() {
+    $domain = 'https://www.heypublisher.com';
+    $debug = (getenv('HEYPUB_DEBUG') === 'true');
+    if ($debug) {
+      $domain = 'http://127.0.0.1:3000';
+    }
+    $this->api = sprintf("%s/api",$domain);
+    $this->logger->debug(sprintf("\tAPI URL: %s",$this->api));
+  }
+
+  // Load the uoid and poid into memory
   private function initialize_oids() {
     global $hp_config;
     $this->logger->debug("API#initialize_oids()");
