@@ -161,7 +161,8 @@ class Admin extends \HeyPublisher\Base {
         'install_date'    => null,
         'upgrade_date'    => null),
       'default' => null,
-      'dynamic' => array()
+      'dynamic' => array(),
+      'default_meta' => array()
     );
     return;
   }
@@ -180,7 +181,7 @@ class Admin extends \HeyPublisher\Base {
 
   private function normalize_asin_list($list) {
     if (!$list) {
-      $list = SGW_BESTSELLERS;
+      $list = $this->initialize_default_asins();
       // $this->error = 'You must input at least one ASIN'; return false;
     }
     $new = array();
@@ -247,9 +248,12 @@ class Admin extends \HeyPublisher\Base {
         // printf("<pre>In update_options()\OPTS: %s\naction = %s</pre>",print_r($opts,1),$_REQUEST['action']);
         $this->options['affiliate_id'] = $opts['affiliate_id'];
         $this->options['country_id'] = $opts['country_id'];
-        $this->options['default'] = SGW_BESTSELLERS;
+        $this->options['default'] = $this->initialize_default_asins();
+        $this->options['default_meta'] = $this->initialize_default_asin_meta();
         // update the default asins, if present
         if ($test = $this->normalize_asin_list($opts['default'])) {
+          // overwrite the defaults with what we input as defaults
+          // Need to get the hash for the default_meta here
           $this->options['default'] = $test;
         }
         update_option(SGW_PLUGIN_OPTTIONS,$this->options);
@@ -257,6 +261,8 @@ class Admin extends \HeyPublisher\Base {
         if ($opts['new']) {
           foreach ($opts['new'] as $id=>$hash) {
             if ($test = $this->normalize_asin_list($hash['asin'])) {
+              // TODO: Hook into this to pre-fetch Images for the listed ASINs, but we want to store in meta as a hash that can be unpacked
+              // with a key that begins with underbar, so it's hidden.
               add_post_meta($id,SGW_POST_META_KEY,$test,true) or update_post_meta($id,SGW_POST_META_KEY,$test);
 							$message = "Your updates have been saved.";
             } else {
@@ -349,7 +355,7 @@ EOF;
         // $this->missing_affiliate_id();
       }
     	if (!$opts['default']) {
-    		$opts['default'] = SGW_BESTSELLERS;
+    		$opts['default'] = $this->initialize_default_asins();
     	}
       $countries = $this->supported_countries();
       $select = '';
@@ -449,5 +455,22 @@ EOF;
     </div>
 <?php
   }
+  // Get the default asins in a comma-separated list
+  private function initialize_default_asins() {
+    $hash = $this->initialize_default_asin_meta();
+    $list = join(',',array_keys($hash));
+    $this->logger->debug(sprintf("\tinitialize_default_asins()\t\$list = %s",$list));
+    return $list;
+  }
+  // Get the default asin meta data in a hash, with asin as a string-based key
+  private function initialize_default_asin_meta() {
+    $hash = array(
+      '1455570249' => array('title'=> 'Make Your Bed','image' => 'https://m.media-amazon.com/images/I/41nYEMfvoEL.jpg'),
+      '144947425X' => array('title'=> 'Milk and Honey','image' => 'https://m.media-amazon.com/images/I/41rrZplMctL.jpg'),
+      '1501164589' => array('title'=> 'Unshakeable: Your Financial Freedom Playbook','image' => 'https://m.media-amazon.com/images/I/51yjcDMAjEL.jpg')
+    );
+    return $hash;
+  }
+
 }
 ?>

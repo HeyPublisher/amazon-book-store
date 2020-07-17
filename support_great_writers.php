@@ -63,12 +63,11 @@ define('SGW_PLUGIN_TESTED', '5.3.0');
 define('SGW_PLUGIN_OPTTIONS', '_sgw_plugin_options');
 define('SGW_BASE_URL', get_option('siteurl').'/wp-content/plugins/support-great-writers/');
 define('SGW_DEFAULT_IMAGE', get_option('siteurl').'/wp-content/plugins/support-great-writers/images/not_found.gif');
-define('SGW_POST_META_KEY','SGW_ASIN');
+define('SGW_POST_META_KEY','SGW_ASIN');           // This is the visible meta data key
+define('SGW_POST_ASINDATA_KEY','_sgw_asindata');  // This is the invisible one that is structured hash
 define('SGW_ADMIN_PAGE','amazon_bookstore');
 define('SGW_ADMIN_PAGE_NONCE','sgw-save-options');
 define('SGW_PLUGIN_ERROR_CONTACT','Please contact <a href="mailto:wordpress@heypublisher.com?subject=Amazon%20Bookstore%20Widget">wordpress@heypublisher.com</a> if you have any questions');
-// Modify the defaults to show
-define('SGW_BESTSELLERS','1455570249,144947425X,1501164589,0692859055');
 define('SGW_PLUGIN_FILE',plugin_basename(__FILE__));
 define('SGW_PLUGIN_FULLPATH', dirname(__FILE__));
 
