@@ -15,7 +15,7 @@ if(preg_match('#' . basename(__FILE__) . '#', $_SERVER['PHP_SELF'])) { die('HeyP
 class API {
   var $api   = null;
   var $error  = false;
-  var $timeout = 4;
+  var $timeout = 3;
   var $config = null;
   var $uoid   = null;
   var $poid   = null;

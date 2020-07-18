@@ -72,10 +72,17 @@ class SupportGreatWriters extends WP_Widget {
       // look to see if we have a post id meta attribute
   	  $list = get_post_meta($post->ID,SGW_POST_META_KEY,true);
       $hash = get_post_meta($post->ID,SGW_POST_ASINDATA_KEY,false);
+
+      // TODO: Need to test the hash against the list and if not the same keys,
+      // need to update the hash against API
+
+
+
+
   	  $this->asins = array_merge($this->asins,$this->shuffle_asin_list($list));
       // $hash may not be populated or may not be an array
       if (is_array($hash)) {
-        $this->asin_meta = $this->asin_meta = $hash;
+        $this->asin_meta = $this->asin_meta + $hash;
         // $this->asin_meta = array_merge($this->asin_meta,$hash);
       }
       $this->logger->debug(sprintf("SupportGreatWriters#load_asins()\n\t\$asin_meta = %s",print_r($this->asin_meta,1)));

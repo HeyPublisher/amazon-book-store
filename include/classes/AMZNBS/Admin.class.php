@@ -290,16 +290,18 @@ class Admin extends \HeyPublisher\Base {
   private function fetch_asin_meta_data($list,$meta) {
     global $SGW_API;
     $newmeta = array();
+    $need = array();
     $array = explode(',',$list);
     foreach ($array as $asin) {
       if (isset($meta[$asin])) {
         $newmeta[$asin] = $meta[$asin];
       } else {
-        // need to fetch the ASIN meta data
-        $data = $SGW_API->fetch_asin($asin);
-        if ($data) {
-          $newmeta[$asin] = $data;
-        }
+        array_push($need,$asin);
+      }
+      $fetch = join(',',$need);
+      $data = $SGW_API->fetch_asins($fetch);
+      if ($data) {
+        array_merge($newmeta,$data);
       }
     }
     $this->logger->debug(sprintf("Admin#fetch_asin_meta_data()\n\t\$newmeta = %s",print_r($newmeta,1)));

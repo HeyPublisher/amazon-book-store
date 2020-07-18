@@ -14,24 +14,21 @@ class ASIN extends \HeyPublisher\Base\API {
   public function __construct() {
     parent::__construct();
     $this->logger->debug("ASIN#__construct()");
-    // TODO: to make this generic, the uoid and poid need to be dynamic
-    // If HeyPublisher submission manager is installed, use those, else use plugin defaults
-    // global $HEYPUB_LOGGER;
-    // $this->logger = $HEYPUB_LOGGER;
-    // $this->logger->debug("HeyPublisher::API loaded");
-    // $this->initialize_api_url();
-    // $this->initialize_oids();
   }
 
-  public function fetch_asin($asin) {
-    $path = sprintf('asins/%s',$asin);
+  // Fetch 'n' number of asins from comma-separated list
+  public function fetch_asins($list) {
+    $data = array();
+    $path = sprintf('asins/%s',$list);
     $result = $this->get($path);
-    if ($result && key_exists('object',$result) && $result['object'] == 'asin' ) {
-      $obj = array(
-        'title' => $result['title'],
-        'image' => $result['image']
-      );
-      return $obj;
+    if ($result && key_exists('object',$result) && $result['object'] == 'list' ) {
+      foreach ($result['data'] as $asin=>$hash) {
+        $data[$asin] = array(
+          'title' => $hash['title'],
+          'image' => $hash['image'],
+        );
+      }
+      return $data;
     }
     return;
   }
