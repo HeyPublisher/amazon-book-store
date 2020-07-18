@@ -125,7 +125,7 @@ class Admin extends \HeyPublisher\Base {
   */
   private function upgrade_plugin($opts) {
     $ver = $this->get_version_as_int($this->options[plugin][version_current]);
-    $this->log("Version = $ver");
+    $this->logger->debug("Version = $ver");
     // printf("<pre>In upgrade_plugin()\n ver = %s\nopts = %s</pre>",print_r($ver,1),print_r($this->options,1));
     if ($ver < 210) {
       $url = $this->plugin_admin_url();
@@ -236,9 +236,9 @@ class Admin extends \HeyPublisher\Base {
     return $countries;
   }
 
-  /**
-  * Update all of the page options sent by the form post
-  */
+  //
+  // Update all of the page options sent by the form post
+  //
   public function update_options($form) {
      $message = 'Your updates have been saved.';
     if(isset($_POST['save_settings'])) {
@@ -248,15 +248,11 @@ class Admin extends \HeyPublisher\Base {
         // printf("<pre>In update_options()\OPTS: %s\naction = %s</pre>",print_r($opts,1),$_REQUEST['action']);
         $this->options['affiliate_id'] = $opts['affiliate_id'];
         $this->options['country_id'] = $opts['country_id'];
-        $this->options['default'] = $this->initialize_default_asins();
-        $this->options['default_meta'] = $this->initialize_default_asin_meta();
-        // update the default asins, if present
-        if ($test = $this->normalize_asin_list($opts['default'])) {
-          // overwrite the defaults with what we input as defaults
-          // Need to get the hash for the default_meta here
-          $this->options['default'] = $test;
-        }
-        update_option(SGW_PLUGIN_OPTTIONS,$this->options);
+
+        $this->update_default_asins($opts['default']);
+        // $this->update_new_asins($opts['new']);
+        // $this->update_existing_asins($opts['posts']);
+
         // update the newly added ASINs
         if ($opts['new']) {
           foreach ($opts['new'] as $id=>$hash) {
@@ -291,6 +287,42 @@ class Admin extends \HeyPublisher\Base {
       return $message;
     }
   }
+  private function fetch_asin_meta_data($list,$meta) {
+    global $SGW_API;
+    $newmeta = array();
+    $array = explode(',',$list);
+    foreach ($array as $asin) {
+      if (isset($meta[$asin])) {
+        $newmeta[$asin] = $meta[$asin];
+      } else {
+        // need to fetch the ASIN meta data
+        $data = $SGW_API->fetch_asin($asin);
+        if ($data) {
+          $newmeta[$asin] = $data;
+        }
+      }
+    }
+    $this->logger->debug(sprintf("Admin#fetch_asin_meta_data()\n\t\$newmeta = %s",print_r($newmeta,1)));
+    return $newmeta;
+  }
+
+
+  private function update_default_asins($defaults){
+    // update the default asins, if present
+    if ($test = $this->normalize_asin_list($defaults)) {
+      $this->options['default']       = $test;
+      $this->options['default_meta']  = $this->fetch_asin_meta_data($test,$this->options['default_meta']);
+    } else {
+      $this->options['default']       = $this->initialize_default_asins();
+      $this->options['default_meta']  = $this->initialize_default_asin_meta();
+    }
+    update_option(SGW_PLUGIN_OPTTIONS,$this->options);
+    return true;
+  }
+
+
+
+
 	/* Contextual Help for the Plugin Configuration Screen */
   public function configuration_screen_help($contextual_help, $screen_id, $screen) {
     if ($screen_id == $this->help) {

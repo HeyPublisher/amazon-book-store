@@ -74,8 +74,8 @@ define('SGW_PLUGIN_FULLPATH', dirname(__FILE__));
 if (!class_exists("\HeyPublisher\Base\Log")) {
   require_once(SGW_PLUGIN_FULLPATH . '/include/classes/HeyPublisher/Base/Log.class.php');
 }
-if (!class_exists("\HeyPublisher\Base\API")) {
-  require_once(SGW_PLUGIN_FULLPATH . '/include/classes/HeyPublisher/Base/API.class.php');
+if (!class_exists("\AMZNBS\ASIN")) {
+  require_once(SGW_PLUGIN_FULLPATH . '/include/classes/AMZNBS/ASIN.class.php');
 }
 if (!class_exists("\HeyPublisher\Base\Updater")) {
   require_once(SGW_PLUGIN_FULLPATH . '/include/classes/HeyPublisher/Base/Updater.class.php');
@@ -85,9 +85,10 @@ $sgw_updater = new \HeyPublisher\Base\Updater( __FILE__ );
 $sgw_updater->set_repository( 'amazon-book-store' ); // set repo
 $sgw_updater->initialize(SGW_PLUGIN_TESTED); // initialize the updater
 
-require_once(dirname(__FILE__) . '/include/classes/SGW_Widget.class.php');
-require_once(dirname( __FILE__ ) . '/include/classes/AMZNBS/Admin.class.php');
+require_once(SGW_PLUGIN_FULLPATH . '/include/classes/SGW_Widget.class.php');
+require_once(SGW_PLUGIN_FULLPATH . '/include/classes/AMZNBS/Admin.class.php');
 $sgw = new \AMZNBS\Admin;
+
 
 // enable link to settings page
 add_filter($sgw->plugin_filter(), array(&$sgw,'plugin_link'), 10, 2 );
