@@ -66,24 +66,17 @@ class SupportGreatWriters extends WP_Widget {
   // load the ASINs into memory in way that makes it easy to pop them off later
   public function load_asins() {
 	  global $post; // this is only available within the widget function, not within the constructor
+    global $SGW_ADMIN; // need reference to the admin class handler for fetching asin meta
     $list = '';
-    $hash = array();
     if (!is_home()) {
       // look to see if we have a post id meta attribute
   	  $list = get_post_meta($post->ID,SGW_POST_META_KEY,true);
-      $hash = get_post_meta($post->ID,SGW_POST_ASINDATA_KEY,false);
-
-      // TODO: Need to test the hash against the list and if not the same keys,
-      // need to update the hash against API
-
-
-
+      $post_meta = get_post_meta($post->ID,SGW_POST_ASINDATA_KEY,false);
 
   	  $this->asins = array_merge($this->asins,$this->shuffle_asin_list($list));
       // $hash may not be populated or may not be an array
-      if (is_array($hash)) {
-        $this->asin_meta = $this->asin_meta + $hash;
-        // $this->asin_meta = array_merge($this->asin_meta,$hash);
+      if (is_array($post_meta)) {
+        $this->asin_meta = $this->asin_meta + $post_meta;
       }
       $this->logger->debug(sprintf("SupportGreatWriters#load_asins()\n\t\$asin_meta = %s",print_r($this->asin_meta,1)));
     }
@@ -91,13 +84,31 @@ class SupportGreatWriters extends WP_Widget {
     $this->asins = array_merge($this->asins,$this->shuffle_asin_list($this->options['default']));
     // include the default hash of asin meta data
     // it may be that we don't have the default meta data - so test for that scenario
-    $meta = $this->options['default_meta'];
-    if (is_array($meta)) {
-      $this->asin_meta = $this->asin_meta + $meta;
-      // $this->asin_meta = array_merge($this->asin_meta,$meta);
+    $default_meta = $this->options['default_meta'];
+    if (is_array($default_meta)) {
+      $this->asin_meta = $this->asin_meta + $default_meta;
     }
     // need to uniquify the array to prevent duplicates
     $this->asins = array_unique($this->asins);
+
+    // TODO: Need to test the hash against the list and if not the same keys,
+    $meta_keys = array_keys($this->asin_meta);
+    $diff = array_diff($this->asins,$meta_keys);
+    $this->logger->debug(sprintf("\t\$this->asins = %s",print_r($this->asins,1)));
+    $this->logger->debug(sprintf("\t\$meta_keys = %s",print_r($meta_keys,1)));
+    $this->logger->debug(sprintf("\t\$diff = %s",print_r($diff,1)));
+    if (count($diff) > 0) {
+      $this->logger->debug("\tIMPORTANT: - fetching missing ASINS!");
+      // we need to fetch the delta
+      // need to update the hash against API
+      $newlist = join(',',$this->asins);
+      $this->asin_meta = $SGW_ADMIN->fetch_asin_meta_data($newlist,$this->asin_meta);
+      // this will also save the default meta data in the post - which is overkill - but we will refactor later
+      // TODO: refactor this to NOT save default meta-data in the post metadata (as it's saved in OPTIONS)
+      // This will require refactoring this method to only be called conditionally,
+      // ie: if the number of requested displays is less than the custom ASINs stored for the post
+      update_post_meta($post->ID,SGW_POST_ASINDATA_KEY,$this->asin_meta);
+    }
   }
   // Get the next ASINs for display
   public function get_next_asin_set($count) {
@@ -105,6 +116,7 @@ class SupportGreatWriters extends WP_Widget {
     $diff = array_diff($this->asins,$this->seen);
     if (count($diff) >= $count) {
       for ($i = 0; $i < $count; $i++) {
+        // pulling the asins off the front
         $next = array_shift($diff);
         $asins[] = $next;
         $this->seen[] = $next;

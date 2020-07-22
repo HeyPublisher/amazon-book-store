@@ -87,19 +87,19 @@ $sgw_updater->initialize(SGW_PLUGIN_TESTED); // initialize the updater
 
 require_once(SGW_PLUGIN_FULLPATH . '/include/classes/SGW_Widget.class.php');
 require_once(SGW_PLUGIN_FULLPATH . '/include/classes/AMZNBS/Admin.class.php');
-$sgw = new \AMZNBS\Admin;
+$SGW_ADMIN = new \AMZNBS\Admin;
 
 
 // enable link to settings page
-add_filter($sgw->plugin_filter(), array(&$sgw,'plugin_link'), 10, 2 );
+add_filter($SGW_ADMIN->plugin_filter(), array(&$SGW_ADMIN,'plugin_link'), 10, 2 );
 
 function RegisterAdminPage() {
-  global $sgw;
+  global $SGW_ADMIN;
   // ensure our js and style sheet only get loaded on our admin page
-  $page = add_options_page('Amazon Book Store', 'Amazon Book Store', 'manage_options', SGW_ADMIN_PAGE, array(&$sgw,'action_handler'));
-  $sgw->help = $page;
+  $page = add_options_page('Amazon Book Store', 'Amazon Book Store', 'manage_options', SGW_ADMIN_PAGE, array(&$SGW_ADMIN,'action_handler'));
+  $SGW_ADMIN->help = $page;
   add_action("admin_print_scripts-$page", 'AdminInit');
-  add_action("admin_print_styles-$page", array(&$sgw,'admin_stylesheets'));
+  add_action("admin_print_styles-$page", array(&$SGW_ADMIN,'admin_stylesheets'));
 }
 
 function AdminInit() {
@@ -113,9 +113,9 @@ if (class_exists("SupportGreatWriters")) {
   add_action('widgets_init', create_function('', 'return register_widget("SupportGreatWriters");'));
   add_action('admin_menu', 'RegisterAdminPage');
 	add_action('wp_enqueue_scripts','RegisterWidgetStyle');
-	add_filter('contextual_help', array(&$sgw,'configuration_screen_help'), 10, 3);
+	add_filter('contextual_help', array(&$SGW_ADMIN,'configuration_screen_help'), 10, 3);
 
 }
-register_activation_hook( __FILE__, array(&$sgw,'activate_plugin'));
-register_deactivation_hook( __FILE__, array(&$sgw,'deactivate_plugin'));
+register_activation_hook( __FILE__, array(&$SGW_ADMIN,'activate_plugin'));
+register_deactivation_hook( __FILE__, array(&$SGW_ADMIN,'deactivate_plugin'));
 ?>

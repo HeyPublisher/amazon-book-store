@@ -287,7 +287,7 @@ class Admin extends \HeyPublisher\Base {
       return $message;
     }
   }
-  private function fetch_asin_meta_data($list,$meta) {
+  public function fetch_asin_meta_data($list,$meta) {
     global $SGW_API;
     $newmeta = array();
     $need = array();
