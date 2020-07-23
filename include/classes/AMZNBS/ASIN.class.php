@@ -9,10 +9,15 @@ if (!class_exists("\HeyPublisher\Base\API")) {
   require_once(SGW_PLUGIN_FULLPATH . '/include/classes/HeyPublisher/Base/API.class.php');
 }
 
-class ASIN extends \HeyPublisher\Base\API {
+class ASIN {
+  var $api = null;
+  var $logger = null;
 
   public function __construct() {
-    parent::__construct();
+    // don't extend the API class to prevent from getting instantiated multiple times
+    global $HEYPUB_API;
+    $this->api = $HEYPUB_API;
+    $this->logger = $HEYPUB_API->logger;
     $this->logger->debug("ASIN#__construct()");
   }
 
@@ -20,9 +25,10 @@ class ASIN extends \HeyPublisher\Base\API {
   public function fetch_asins($list) {
     $data = array();
     $path = sprintf('asins/%s',$list);
-    $result = $this->get($path);
+    $result = $this->api->get($path);
     if ($result && key_exists('object',$result) && $result['object'] == 'list' ) {
-      foreach ($result['data'] as $asin=>$hash) {
+      foreach ($result['data'] as $hash) {
+        $asin = sprintf("ASIN_%s",$hash['id']);
         $data[$asin] = array(
           'title' => $hash['title'],
           'image' => $hash['image'],

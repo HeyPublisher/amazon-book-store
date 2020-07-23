@@ -13,7 +13,7 @@ class SupportGreatWriters extends WP_Widget {
 	function __construct() {
     global $HEYPUB_LOGGER;
     $this->logger = $HEYPUB_LOGGER;
-    $this->logger->debug("SupportGreatWriters");
+    $this->logger->debug("WP_Widget::SupportGreatWriters loaded");
 		$control_ops = array( 'id_base' => 'sgw' );
 		$widget_ops = array('description' => __('Easily sell Amazon books or other products in sidebar.','sgw'));
 		$this->options = get_option(SGW_PLUGIN_OPTTIONS);
@@ -38,16 +38,24 @@ class SupportGreatWriters extends WP_Widget {
       // display default image
       $link = sprintf('<img src="%s" title="Product ASIN not defined">',SGW_DEFAULT_IMAGE);
     } else {
-      if (isset($this->asin_meta[$asin]['image'])) {
-        $image = $this->asin_meta[$asin]['image']; // secure URL image
-        $title = $this->asin_meta[$asin]['title'];
+      $asin_key = sprintf("ASIN_%s",$asin);
+      if (isset($this->asin_meta[$asin_key]['image'])) {
+        $image = $this->asin_meta[$asin_key]['image']; // secure URL image
+        $title = $this->asin_meta[$asin_key]['title'];
       } else {
         $image = sprintf("http://ecx.images-amazon.com/images/P/%s.01._SCMZZZZZZZ_.jpg",$asin); // secure URL image
         $title = "Click for more Information";
       }
+      // Need to updtae to use this page URL
+      $pageUrl = sprintf("https://www.%s/dp/%s?tag=%s&linkCode=ogi&th=1&psc=1",$url_map[$country],$asin,$assoc);
 
-      $format = '<a title="%s" target=_blank href="https://www.%s/gp/product/%s?ie=UTF8&tag=%s&linkCode=as2&camp=1789&creative=9325&creativeASIN=%s"><img class="sgw_product_img" src="%s"></a><img src="https://www.assoc-%s/e/ir?t=%s&l=as2&o=1&a=%s" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />';
-      $link = sprintf($format,$title,$url_map[$country],$asin,$assoc,$asin,$image,$url_map[$country],$assoc,$asin);
+      // Associates Central says this should be the link
+      // <a target="_blank"  href="https://www.amazon.com/gp/product/2070319857/ref=as_li_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=2070319857&linkCode=as2&tag=pifaliterajourna&linkId=e921fb006cada4fc24bde63e4deff734"><img border="0" src="//ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&MarketPlace=US&ASIN=2070319857&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL250_&tag=pifaliterajourna" ></a><img src="//ir-na.amazon-adsystem.com/e/ir?t=pifaliterajourna&l=am2&o=1&a=2070319857" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+
+      // Link checking does not require all of the tracking pixels though.
+
+      $format = '<a title="%s" target="_blank" href="%s"><img class="sgw_product_img" src="%s"></a><img src="https://www.assoc-%s/e/ir?t=%s&l=as2&o=1&a=%s" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />';
+      $link = sprintf($format,$title,$pageUrl,$image,$url_map[$country],$assoc,$asin);
     }
     return $link;
   }
@@ -67,18 +75,22 @@ class SupportGreatWriters extends WP_Widget {
   public function load_asins() {
 	  global $post; // this is only available within the widget function, not within the constructor
     global $SGW_ADMIN; // need reference to the admin class handler for fetching asin meta
+    $this->logger->debug("SupportGreatWriters#load_asins()");
     $list = '';
     if (!is_home()) {
+      $this->logger->debug(sprintf("\t\$post->ID : %s",$post->ID));
       // look to see if we have a post id meta attribute
   	  $list = get_post_meta($post->ID,SGW_POST_META_KEY,true);
-      $post_meta = get_post_meta($post->ID,SGW_POST_ASINDATA_KEY,false);
+      $post_meta = get_post_meta($post->ID,SGW_POST_ASINDATA_KEY,true);
+      $this->logger->debug(sprintf("\t\$post_meta = %s",print_r($post_meta,1)));
 
   	  $this->asins = array_merge($this->asins,$this->shuffle_asin_list($list));
       // $hash may not be populated or may not be an array
       if (is_array($post_meta)) {
         $this->asin_meta = $this->asin_meta + $post_meta;
+        $this->logger->debug(sprintf("\t\$this->asin_meta adding \$post_meta = %s",print_r($this->asin_meta,1)));
       }
-      $this->logger->debug(sprintf("SupportGreatWriters#load_asins()\n\t\$asin_meta = %s",print_r($this->asin_meta,1)));
+
     }
     // concatenate the defaults onto the end
     $this->asins = array_merge($this->asins,$this->shuffle_asin_list($this->options['default']));
@@ -87,27 +99,35 @@ class SupportGreatWriters extends WP_Widget {
     $default_meta = $this->options['default_meta'];
     if (is_array($default_meta)) {
       $this->asin_meta = $this->asin_meta + $default_meta;
+      $this->logger->debug(sprintf("\t\$this->asin_meta adding \$default_meta = %s",print_r($this->asin_meta,1)));
     }
     // need to uniquify the array to prevent duplicates
     $this->asins = array_unique($this->asins);
 
     // TODO: Need to test the hash against the list and if not the same keys,
-    $meta_keys = array_keys($this->asin_meta);
+    $meta_keys = $SGW_ADMIN->normalize_meta_keys($this->asin_meta);
     $diff = array_diff($this->asins,$meta_keys);
-    $this->logger->debug(sprintf("\t\$this->asins = %s",print_r($this->asins,1)));
+    // $this->logger->debug(sprintf("\t\$this->asins = %s",print_r($this->asins,1)));
+    $this->logger->debug(sprintf("\tSQUASHING SOME HASHES %s", "now!!"));
     $this->logger->debug(sprintf("\t\$meta_keys = %s",print_r($meta_keys,1)));
     $this->logger->debug(sprintf("\t\$diff = %s",print_r($diff,1)));
     if (count($diff) > 0) {
       $this->logger->debug("\tIMPORTANT: - fetching missing ASINS!");
-      // we need to fetch the delta
-      // need to update the hash against API
+      // Only need to fetch the diff
+      // but append the meta data fetched into what we already have
       $newlist = join(',',$this->asins);
-      $this->asin_meta = $SGW_ADMIN->fetch_asin_meta_data($newlist,$this->asin_meta);
+      $this->logger->debug(sprintf("\t\$newlist to fetch from API : %s",print_r($newlist,1)));
+      $fetched_meta = $SGW_ADMIN->fetch_asin_meta_data($newlist,$this->asin_meta);
+      $this->asin_meta = $fetched_meta;
+      $this->logger->debug("\tIMPORTANT: - DONE fetching missing ASINS!");
+      $this->logger->debug(sprintf("\t\$fetched_meta : %s",print_r($fetched_meta,1)));
+      $this->logger->debug(sprintf("\t\$this->asin_meta : %s",print_r($this->asin_meta,1)));
       // this will also save the default meta data in the post - which is overkill - but we will refactor later
       // TODO: refactor this to NOT save default meta-data in the post metadata (as it's saved in OPTIONS)
       // This will require refactoring this method to only be called conditionally,
       // ie: if the number of requested displays is less than the custom ASINs stored for the post
-      update_post_meta($post->ID,SGW_POST_ASINDATA_KEY,$this->asin_meta);
+      $ret = update_post_meta($post->ID,SGW_POST_ASINDATA_KEY,$this->asin_meta);
+      $this->logger->debug(sprintf("\treturn from update_post_meta() : %s ",$ret));
     }
   }
   // Get the next ASINs for display

@@ -24,8 +24,9 @@ class Admin extends \HeyPublisher\Base {
 
   public function __construct() {
     parent::__construct();
+    $this->logger->debug("HeyPublisher::Base::Admin loaded");
     $this->options = get_option(SGW_PLUGIN_OPTTIONS);
-    $this->logger->debug(sprintf("in constructor\nopts = %s",print_r($this->options,true)));
+    $this->logger->debug(sprintf("\tAdmin#__construct\n\t\$this->options = %s",print_r($this->options,true)));
     // $this->check_plugin_version();  // may need to reintroduce this
     $this->nav_slug = SGW_ADMIN_PAGE; // not 'amazon_bookstore' because this needs to map to dir name
     $this->slug = 'support-great-writers'; // not 'amazon_bookstore' because this needs to map to dir name
@@ -287,26 +288,33 @@ class Admin extends \HeyPublisher\Base {
       return $message;
     }
   }
+
+  // Purpose - fetch all of the asins requested by $list
+  // append the fetched data to the passed-in $meta list and return
   public function fetch_asin_meta_data($list,$meta) {
     global $SGW_API;
-    $newmeta = array();
-    $need = array();
-    $array = explode(',',$list);
-    foreach ($array as $asin) {
-      if (isset($meta[$asin])) {
-        $newmeta[$asin] = $meta[$asin];
-      } else {
-        array_push($need,$asin);
-      }
-      $fetch = join(',',$need);
-      $data = $SGW_API->fetch_asins($fetch);
-      if ($data) {
-        array_merge($newmeta,$data);
-      }
+    $this->logger->debug("Admin#fetch_asin_meta_data()");
+    $this->logger->debug(sprintf("\t\$meta IN (%s) = %s",count($meta), print_r($meta,1)));
+    $data = $SGW_API->fetch_asins($list);
+    if ($data) {
+      $meta = array_merge($meta,$data);
     }
-    $this->logger->debug(sprintf("Admin#fetch_asin_meta_data()\n\t\$newmeta = %s",print_r($newmeta,1)));
-    return $newmeta;
+    $this->logger->debug(sprintf("\t\$data (%s) = %s",count($data),print_r($data,1)));
+    $this->logger->debug(sprintf("\t\$meta OUT (%s) = %s",count($meta), print_r($meta,1)));
+    return $meta;
   }
+
+  // normalize the keys in the meta hash
+  // need to strip off the prefix `ASIN_`
+  public function normalize_meta_keys($hash){
+    $this->logger->debug("Admin#normalize_meta_keys()");
+    $keys = array_keys($hash);
+    $set = str_replace("ASIN_","",$keys);
+    $this->logger->debug(sprintf("\t\$keys %s",print_r($keys,1)));
+    $this->logger->debug(sprintf("\t\$set %s",print_r($set,1)));
+    return $set;
+  }
+
 
 
   private function update_default_asins($defaults){
@@ -499,9 +507,9 @@ EOF;
   // Get the default asin meta data in a hash, with asin as a string-based key
   private function initialize_default_asin_meta() {
     $hash = array(
-      '1455570249' => array('title'=> 'Make Your Bed','image' => 'https://m.media-amazon.com/images/I/41nYEMfvoEL.jpg'),
-      '144947425X' => array('title'=> 'Milk and Honey','image' => 'https://m.media-amazon.com/images/I/41rrZplMctL.jpg'),
-      '1501164589' => array('title'=> 'Unshakeable: Your Financial Freedom Playbook','image' => 'https://m.media-amazon.com/images/I/51yjcDMAjEL.jpg')
+      'ASIN_1455570249' => array('title'=> 'Make Your Bed','image' => 'https://m.media-amazon.com/images/I/41nYEMfvoEL.jpg'),
+      'ASIN_144947425X' => array('title'=> 'Milk and Honey','image' => 'https://m.media-amazon.com/images/I/41rrZplMctL.jpg'),
+      'ASIN_1501164589' => array('title'=> 'Unshakeable: Your Financial Freedom Playbook','image' => 'https://m.media-amazon.com/images/I/51yjcDMAjEL.jpg')
     );
     return $hash;
   }

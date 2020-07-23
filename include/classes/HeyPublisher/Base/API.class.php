@@ -26,6 +26,7 @@ class API {
     global $HEYPUB_LOGGER;
     $this->logger = $HEYPUB_LOGGER;
     $this->logger->debug("HeyPublisher::API loaded");
+
     $this->initialize_api_url();
     $this->initialize_oids();
     register_shutdown_function(array($this,'shutdown'));
