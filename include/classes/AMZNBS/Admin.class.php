@@ -161,6 +161,8 @@ class Admin extends \HeyPublisher\Base {
         'version_current' => null,
         'install_date'    => null,
         'upgrade_date'    => null),
+      'affiliate_id'      => 'pif-richard-20',  // default or things break
+      'country_id'        => 'com',       // default
       'default' => null,
       'dynamic' => array(),
       'default_meta' => array()
@@ -226,6 +228,7 @@ class Admin extends \HeyPublisher\Base {
 
   public function supported_countries() {
     $countries = array(
+      'br' => 'Brazil (amazon.com.br)',
       'ca' => 'Canada (amazon.ca)',
       'fr' => 'France (amazon.fr)',
       'de' => 'Germany (amazon.de)',
@@ -460,6 +463,7 @@ EOF;
       <form method="post" action="admin.php?page={$this->nav_slug}">
         {$nonce}
   			<p>Add the widget to your side-bar and configure which products you want to sell using the form below.</p>
+        <p>Ensure your Affiliate ID is accurate. A default ID may be displayed below so that the plugin works while you are testing.</p>
         <ul>
           <li>
             <label class='sgw_label' for='amznbs_country_id'>Affiliate Country</label>

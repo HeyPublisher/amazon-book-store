@@ -103,10 +103,10 @@ function RegisterAdminPage() {
 }
 
 function AdminInit() {
-  wp_enqueue_script('sgw', WP_PLUGIN_URL . '/support-great-writers/include/js/sgw.js');
+  wp_enqueue_script('sgw', WP_PLUGIN_URL . '/support-great-writers/include/js/sgw.js',array(),SGW_PLUGIN_VERSION);
 }
 function RegisterWidgetStyle() {
-	wp_enqueue_style( 'sgw_widget', SGW_BASE_URL . 'css/sgw_widget.css', array(), '1.2.2' );
+	wp_enqueue_style( 'sgw_widget', SGW_BASE_URL . 'css/sgw_widget.css', array(), SGW_PLUGIN_VERSION );
 }
 
 if (class_exists("SupportGreatWriters")) {

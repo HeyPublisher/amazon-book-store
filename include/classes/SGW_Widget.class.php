@@ -31,7 +31,8 @@ class SupportGreatWriters extends WP_Widget {
       'fr'      => 'amazon.fr',
       'ca'      => 'amazon.ca',
       'it'      => 'amazon.it',
-      'es'      => 'amazon.es'
+      'es'      => 'amazon.es',
+      'br'      => 'amazon.com.br'
     );
 
     if (!$asin) {
