@@ -15,9 +15,9 @@ class ASIN {
 
   public function __construct() {
     // don't extend the API class to prevent from getting instantiated multiple times
-    global $HEYPUB_API;
+    global $HEYPUB_API, $HEYPUB_LOGGER;
     $this->api = $HEYPUB_API;
-    $this->logger = $HEYPUB_API->logger;
+    $this->logger = $HEYPUB_LOGGER;
     $this->logger->debug("ASIN#__construct()");
   }
 

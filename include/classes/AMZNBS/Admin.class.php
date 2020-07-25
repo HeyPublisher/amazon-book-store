@@ -315,13 +315,36 @@ class Admin extends \HeyPublisher\Base {
     return $set;
   }
 
+  // Tests for the difference between the array of asins, and the asin meta hash
+  // Returns a hash of meta data suitable for saving to disk, as it includes all asins in $list
+  public function ensure_meta_for_asins($list,$hash){
+    $this->logger->debug("ADMIN#ensure_meta_for_asins()");
 
+    $asins = array_filter(array_unique(explode(',',$list)));
+    $meta = $this->normalize_meta_keys($hash);
+    $diff = array_diff($asins,$meta);
+
+    $this->logger->debug(sprintf("\t\$asins (%s) = %s",count($asins),print_r($asins,1)));
+    $this->logger->debug(sprintf("\t\$meta (%s) = %s",count($meta),print_r($meta,1)));
+    $this->logger->debug(sprintf("\t\$diff (%s) = %s",count($diff),print_r($diff,1)));
+
+    if (count($diff) > 0) {
+      $this->logger->debug("\tfetching missing ASINS!");
+      // Only need to fetch the diff
+      // but append the meta data fetched into what we already have
+      $newlist = join(',',$diff);
+      $this->logger->debug(sprintf("\tfetching \$newlist from API : %s",print_r($newlist,1)));
+      $fetched = $this->fetch_asin_meta_data($newlist,$hash);
+      return $fetched;
+    }
+    return $hash;
+  }
 
   private function update_default_asins($defaults){
     // update the default asins, if present
     if ($test = $this->normalize_asin_list($defaults)) {
       $this->options['default']       = $test;
-      $this->options['default_meta']  = $this->fetch_asin_meta_data($test,$this->options['default_meta']);
+      $this->options['default_meta']  = $this->ensure_meta_for_asins($test,$this->options['default_meta']);
     } else {
       $this->options['default']       = $this->initialize_default_asins();
       $this->options['default_meta']  = $this->initialize_default_asin_meta();
@@ -329,9 +352,6 @@ class Admin extends \HeyPublisher\Base {
     update_option(SGW_PLUGIN_OPTTIONS,$this->options);
     return true;
   }
-
-
-
 
 	/* Contextual Help for the Plugin Configuration Screen */
   public function configuration_screen_help($contextual_help, $screen_id, $screen) {

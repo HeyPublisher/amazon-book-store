@@ -43,7 +43,7 @@ class SupportGreatWriters extends WP_Widget {
         $image = $this->asin_meta[$asin_key]['image']; // secure URL image
         $title = $this->asin_meta[$asin_key]['title'];
       } else {
-        $image = sprintf("http://ecx.images-amazon.com/images/P/%s.01._SCMZZZZZZZ_.jpg",$asin); // secure URL image
+        $image = sprintf("http://ecx.images-amazon.com/images/P/%s.01._SCMZZZZZZZ_.jpg",$asin); // non-secure URL image
         $title = "Click for more Information";
       }
       // Need to updtae to use this page URL
@@ -77,6 +77,7 @@ class SupportGreatWriters extends WP_Widget {
     global $SGW_ADMIN; // need reference to the admin class handler for fetching asin meta
     $this->logger->debug("SupportGreatWriters#load_asins()");
     $list = '';
+    $meta_hash = array();
     if (!is_home()) {
       $this->logger->debug(sprintf("\t\$post->ID : %s",$post->ID));
       // look to see if we have a post id meta attribute
@@ -85,49 +86,30 @@ class SupportGreatWriters extends WP_Widget {
       $this->logger->debug(sprintf("\t\$post_meta = %s",print_r($post_meta,1)));
 
   	  $this->asins = array_merge($this->asins,$this->shuffle_asin_list($list));
-      // $hash may not be populated or may not be an array
-      if (is_array($post_meta)) {
-        $this->asin_meta = $this->asin_meta + $post_meta;
-        $this->logger->debug(sprintf("\t\$this->asin_meta adding \$post_meta = %s",print_r($this->asin_meta,1)));
-      }
 
+      // Just-In time updates of existing ASIN lists
+      // $post_meta may not be fully populated or may not be an array
+      if (!is_array($post_meta)) {
+        $this->asin_meta = $SGW_ADMIN->ensure_meta_for_asins($list,array());
+        $ret = update_post_meta($post->ID,SGW_POST_ASINDATA_KEY,$this->asin_meta);
+        $this->logger->debug(sprintf("\t\$post_meta is NOT array : return : %s ",$ret));
+      } else {
+        $key_test = $SGW_ADMIN->normalize_meta_keys($post_meta);
+        if (count(array_diff($this->asins,$key_test)) > 0) {
+          $this->asin_meta = $SGW_ADMIN->ensure_meta_for_asins($list,$post_meta);
+          $ret = update_post_meta($post->ID,SGW_POST_ASINDATA_KEY,$this->asin_meta);
+          $this->logger->debug(sprintf("\t\$post_meta was NOT same as \$list : return : %s ",$ret));
+        } else {
+          $this->logger->debug("\t\$post_meta was OK ");
+          $this->asin_meta = $post_meta;
+        }
+      }
     }
     // concatenate the defaults onto the end
     $this->asins = array_merge($this->asins,$this->shuffle_asin_list($this->options['default']));
-    // include the default hash of asin meta data
-    // it may be that we don't have the default meta data - so test for that scenario
-    $default_meta = $this->options['default_meta'];
-    if (is_array($default_meta)) {
-      $this->asin_meta = $this->asin_meta + $default_meta;
-      $this->logger->debug(sprintf("\t\$this->asin_meta adding \$default_meta = %s",print_r($this->asin_meta,1)));
-    }
-    // need to uniquify the array to prevent duplicates
-    $this->asins = array_unique($this->asins);
-
-    // TODO: Need to test the hash against the list and if not the same keys,
-    $meta_keys = $SGW_ADMIN->normalize_meta_keys($this->asin_meta);
-    $diff = array_diff($this->asins,$meta_keys);
-    // $this->logger->debug(sprintf("\t\$this->asins = %s",print_r($this->asins,1)));
-    $this->logger->debug(sprintf("\tSQUASHING SOME HASHES %s", "now!!"));
-    $this->logger->debug(sprintf("\t\$meta_keys = %s",print_r($meta_keys,1)));
-    $this->logger->debug(sprintf("\t\$diff = %s",print_r($diff,1)));
-    if (count($diff) > 0) {
-      $this->logger->debug("\tIMPORTANT: - fetching missing ASINS!");
-      // Only need to fetch the diff
-      // but append the meta data fetched into what we already have
-      $newlist = join(',',$this->asins);
-      $this->logger->debug(sprintf("\t\$newlist to fetch from API : %s",print_r($newlist,1)));
-      $fetched_meta = $SGW_ADMIN->fetch_asin_meta_data($newlist,$this->asin_meta);
-      $this->asin_meta = $fetched_meta;
-      $this->logger->debug("\tIMPORTANT: - DONE fetching missing ASINS!");
-      $this->logger->debug(sprintf("\t\$fetched_meta : %s",print_r($fetched_meta,1)));
-      $this->logger->debug(sprintf("\t\$this->asin_meta : %s",print_r($this->asin_meta,1)));
-      // this will also save the default meta data in the post - which is overkill - but we will refactor later
-      // TODO: refactor this to NOT save default meta-data in the post metadata (as it's saved in OPTIONS)
-      // This will require refactoring this method to only be called conditionally,
-      // ie: if the number of requested displays is less than the custom ASINs stored for the post
-      $ret = update_post_meta($post->ID,SGW_POST_ASINDATA_KEY,$this->asin_meta);
-      $this->logger->debug(sprintf("\treturn from update_post_meta() : %s ",$ret));
+    if (is_array($this->options['default_meta'])) {
+      // This would only NOT be an array if an update since 3.0.0 has not been made
+      $this->asin_meta = $this->asin_meta + $this->options['default_meta'];
     }
   }
   // Get the next ASINs for display
