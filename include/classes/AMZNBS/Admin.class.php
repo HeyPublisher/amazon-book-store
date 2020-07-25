@@ -254,15 +254,11 @@ class Admin extends \HeyPublisher\Base {
         $this->options['country_id'] = $opts['country_id'];
 
         $this->update_default_asins($opts['default']);
-        // $this->update_new_asins($opts['new']);
-        // $this->update_existing_asins($opts['posts']);
 
         // update the newly added ASINs
         if ($opts['new']) {
           foreach ($opts['new'] as $id=>$hash) {
             if ($test = $this->normalize_asin_list($hash['asin'])) {
-              // TODO: Hook into this to pre-fetch Images for the listed ASINs, but we want to store in meta as a hash that can be unpacked
-              // with a key that begins with underbar, so it's hidden.
               add_post_meta($id,SGW_POST_META_KEY,$test,true) or update_post_meta($id,SGW_POST_META_KEY,$test);
 							$message = "Your updates have been saved.";
             } else {

@@ -4,3 +4,4 @@ error.log
 
 # ignore the svn control files
 .svn
+_NOTES.txt

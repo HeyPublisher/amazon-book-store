@@ -50,13 +50,8 @@ class SupportGreatWriters extends WP_Widget {
       // Need to updtae to use this page URL
       $pageUrl = sprintf("https://www.%s/dp/%s?tag=%s&linkCode=ogi&th=1&psc=1",$url_map[$country],$asin,$assoc);
 
-      // Associates Central says this should be the link
-      // <a target="_blank"  href="https://www.amazon.com/gp/product/2070319857/ref=as_li_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=2070319857&linkCode=as2&tag=pifaliterajourna&linkId=e921fb006cada4fc24bde63e4deff734"><img border="0" src="//ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&MarketPlace=US&ASIN=2070319857&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL250_&tag=pifaliterajourna" ></a><img src="//ir-na.amazon-adsystem.com/e/ir?t=pifaliterajourna&l=am2&o=1&a=2070319857" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
-
-      // Link checking does not require all of the tracking pixels though.
-
-      $format = '<a title="%s" target="_blank" href="%s"><img class="sgw_product_img" src="%s"></a><img src="https://www.assoc-%s/e/ir?t=%s&l=as2&o=1&a=%s" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />';
-      $link = sprintf($format,$title,$pageUrl,$image,$url_map[$country],$assoc,$asin);
+      $format = '<a title="%s" target="_blank" href="%s"><img class="sgw_product_img" src="%s"></a>';
+      $link = sprintf($format,$title,$pageUrl,$image);
     }
     return $link;
   }
