@@ -8,13 +8,14 @@
   var WIDGET_CNT = 0;
   var WIDGET_SET = {};
   var AFFILIATES = {
-    'com':    {domain: 'https://affiliate-program.amazon.com', id: 'sgw02-20  '},
+    'com':    {domain: 'https://affiliate-program.amazon.com', id: 'pif-richard-20'},
     'co.uk':  {domain: 'https://affiliate-program.amazon.co.uk', id: 'sgw0a-21'},
     'de':     {domain: 'https://partnernet.amazon.de', id: 'sgw05-21'},
     'fr':     {domain: 'https://partenaires.amazon.fr', id: 'sgw08-21'},
     'it':     {domain: 'https://programma-affiliazione.amazon.it', id: 'sgw0c-21'},
     'es':     {domain: 'https://afiliados.amazon.es', id: 'sgw0f-21'},
-    'ca':     {domain: 'https://associates.amazon.ca', id: 'sgw0a-20'}
+    'ca':     {domain: 'https://associates.amazon.ca', id: 'sgw0a-20'},
+    'br':     {domain: 'https://associados.amazon.com.br/', id: 'sgw0b-20'}
   };
 
   function getAffiliateId(region) {

@@ -8,7 +8,7 @@ namespace AMZNBS;
 
 */
 if (!class_exists('\HeyPublisher\Base')) {
-  load_template(dirname( __FILE__ ) . '/../HeyPublisher/Base.class.php');
+  require_once( dirname(__FILE__) . '/../HeyPublisher/Base.class.php');
 }
 class Admin extends \HeyPublisher\Base {
 
@@ -24,8 +24,9 @@ class Admin extends \HeyPublisher\Base {
 
   public function __construct() {
     parent::__construct();
+    $this->logger->debug("HeyPublisher::Base::Admin loaded");
     $this->options = get_option(SGW_PLUGIN_OPTTIONS);
-    $this->logger->debug(sprintf("in constructor\nopts = %s",print_r($this->options,true)));
+    $this->logger->debug(sprintf("\tAdmin#__construct\n\t\$this->options = %s",print_r($this->options,true)));
     // $this->check_plugin_version();  // may need to reintroduce this
     $this->nav_slug = SGW_ADMIN_PAGE; // not 'amazon_bookstore' because this needs to map to dir name
     $this->slug = 'support-great-writers'; // not 'amazon_bookstore' because this needs to map to dir name
@@ -125,7 +126,7 @@ class Admin extends \HeyPublisher\Base {
   */
   private function upgrade_plugin($opts) {
     $ver = $this->get_version_as_int($this->options[plugin][version_current]);
-    $this->log("Version = $ver");
+    $this->logger->debug("Version = $ver");
     // printf("<pre>In upgrade_plugin()\n ver = %s\nopts = %s</pre>",print_r($ver,1),print_r($this->options,1));
     if ($ver < 210) {
       $url = $this->plugin_admin_url();
@@ -160,8 +161,11 @@ class Admin extends \HeyPublisher\Base {
         'version_current' => null,
         'install_date'    => null,
         'upgrade_date'    => null),
+      'affiliate_id'      => 'pif-richard-20',  // default or things break
+      'country_id'        => 'com',       // default
       'default' => null,
-      'dynamic' => array()
+      'dynamic' => array(),
+      'default_meta' => array()
     );
     return;
   }
@@ -180,7 +184,7 @@ class Admin extends \HeyPublisher\Base {
 
   private function normalize_asin_list($list) {
     if (!$list) {
-      $list = SGW_BESTSELLERS;
+      $list = $this->initialize_default_asins();
       // $this->error = 'You must input at least one ASIN'; return false;
     }
     $new = array();
@@ -224,6 +228,7 @@ class Admin extends \HeyPublisher\Base {
 
   public function supported_countries() {
     $countries = array(
+      'br' => 'Brazil (amazon.com.br)',
       'ca' => 'Canada (amazon.ca)',
       'fr' => 'France (amazon.fr)',
       'de' => 'Germany (amazon.de)',
@@ -235,9 +240,9 @@ class Admin extends \HeyPublisher\Base {
     return $countries;
   }
 
-  /**
-  * Update all of the page options sent by the form post
-  */
+  //
+  // Update all of the page options sent by the form post
+  //
   public function update_options($form) {
      $message = 'Your updates have been saved.';
     if(isset($_POST['save_settings'])) {
@@ -247,12 +252,9 @@ class Admin extends \HeyPublisher\Base {
         // printf("<pre>In update_options()\OPTS: %s\naction = %s</pre>",print_r($opts,1),$_REQUEST['action']);
         $this->options['affiliate_id'] = $opts['affiliate_id'];
         $this->options['country_id'] = $opts['country_id'];
-        $this->options['default'] = SGW_BESTSELLERS;
-        // update the default asins, if present
-        if ($test = $this->normalize_asin_list($opts['default'])) {
-          $this->options['default'] = $test;
-        }
-        update_option(SGW_PLUGIN_OPTTIONS,$this->options);
+
+        $this->update_default_asins($opts['default']);
+
         // update the newly added ASINs
         if ($opts['new']) {
           foreach ($opts['new'] as $id=>$hash) {
@@ -285,6 +287,71 @@ class Admin extends \HeyPublisher\Base {
       return $message;
     }
   }
+
+  // Purpose - fetch all of the asins requested by $list
+  // append the fetched data to the passed-in $meta list and return
+  public function fetch_asin_meta_data($list,$meta) {
+    global $SGW_API;
+    $this->logger->debug("Admin#fetch_asin_meta_data()");
+    $this->logger->debug(sprintf("\t\$meta IN (%s) = %s",count($meta), print_r($meta,1)));
+    $data = $SGW_API->fetch_asins($list);
+    if ($data) {
+      $meta = array_merge($meta,$data);
+    }
+    $this->logger->debug(sprintf("\t\$data (%s) = %s",count($data),print_r($data,1)));
+    $this->logger->debug(sprintf("\t\$meta OUT (%s) = %s",count($meta), print_r($meta,1)));
+    return $meta;
+  }
+
+  // normalize the keys in the meta hash
+  // need to strip off the prefix `ASIN_`
+  public function normalize_meta_keys($hash){
+    $this->logger->debug("Admin#normalize_meta_keys()");
+    $keys = array_keys($hash);
+    $set = str_replace("ASIN_","",$keys);
+    $this->logger->debug(sprintf("\t\$keys %s",print_r($keys,1)));
+    $this->logger->debug(sprintf("\t\$set %s",print_r($set,1)));
+    return $set;
+  }
+
+  // Tests for the difference between the array of asins, and the asin meta hash
+  // Returns a hash of meta data suitable for saving to disk, as it includes all asins in $list
+  public function ensure_meta_for_asins($list,$hash){
+    $this->logger->debug("ADMIN#ensure_meta_for_asins()");
+
+    $asins = array_filter(array_unique(explode(',',$list)));
+    $meta = $this->normalize_meta_keys($hash);
+    $diff = array_diff($asins,$meta);
+
+    $this->logger->debug(sprintf("\t\$asins (%s) = %s",count($asins),print_r($asins,1)));
+    $this->logger->debug(sprintf("\t\$meta (%s) = %s",count($meta),print_r($meta,1)));
+    $this->logger->debug(sprintf("\t\$diff (%s) = %s",count($diff),print_r($diff,1)));
+
+    if (count($diff) > 0) {
+      $this->logger->debug("\tfetching missing ASINS!");
+      // Only need to fetch the diff
+      // but append the meta data fetched into what we already have
+      $newlist = join(',',$diff);
+      $this->logger->debug(sprintf("\tfetching \$newlist from API : %s",print_r($newlist,1)));
+      $fetched = $this->fetch_asin_meta_data($newlist,$hash);
+      return $fetched;
+    }
+    return $hash;
+  }
+
+  private function update_default_asins($defaults){
+    // update the default asins, if present
+    if ($test = $this->normalize_asin_list($defaults)) {
+      $this->options['default']       = $test;
+      $this->options['default_meta']  = $this->ensure_meta_for_asins($test,$this->options['default_meta']);
+    } else {
+      $this->options['default']       = $this->initialize_default_asins();
+      $this->options['default_meta']  = $this->initialize_default_asin_meta();
+    }
+    update_option(SGW_PLUGIN_OPTTIONS,$this->options);
+    return true;
+  }
+
 	/* Contextual Help for the Plugin Configuration Screen */
   public function configuration_screen_help($contextual_help, $screen_id, $screen) {
     if ($screen_id == $this->help) {
@@ -349,7 +416,7 @@ EOF;
         // $this->missing_affiliate_id();
       }
     	if (!$opts['default']) {
-    		$opts['default'] = SGW_BESTSELLERS;
+    		$opts['default'] = $this->initialize_default_asins();
     	}
       $countries = $this->supported_countries();
       $select = '';
@@ -392,6 +459,7 @@ EOF;
       <form method="post" action="admin.php?page={$this->nav_slug}">
         {$nonce}
   			<p>Add the widget to your side-bar and configure which products you want to sell using the form below.</p>
+        <p>Ensure your Affiliate ID is accurate. A default ID may be displayed below so that the plugin works while you are testing.</p>
         <ul>
           <li>
             <label class='sgw_label' for='amznbs_country_id'>Affiliate Country</label>
@@ -414,8 +482,12 @@ EOF;
         </ul>
         <p>
           If you want specific products to display on individual pages, add those product ASINs here.
+        </p>
+        <p>
           Select the POST from the drop-down list below then input the desired ASINs as a
           comma-separated list.  You can add as many or as few as you like.
+        </p>
+        <p>
           You can also set the ASINs in the Post Edit page by using the custom field
           <code>{$this->post_meta_key}</code>.
         </p>
@@ -445,5 +517,22 @@ EOF;
     </div>
 <?php
   }
+  // Get the default asins in a comma-separated list
+  private function initialize_default_asins() {
+    $hash = $this->initialize_default_asin_meta();
+    $list = join(',',array_keys($hash));
+    $this->logger->debug(sprintf("\tinitialize_default_asins()\t\$list = %s",$list));
+    return $list;
+  }
+  // Get the default asin meta data in a hash, with asin as a string-based key
+  private function initialize_default_asin_meta() {
+    $hash = array(
+      'ASIN_1455570249' => array('title'=> 'Make Your Bed','image' => 'https://m.media-amazon.com/images/I/41nYEMfvoEL.jpg'),
+      'ASIN_144947425X' => array('title'=> 'Milk and Honey','image' => 'https://m.media-amazon.com/images/I/41rrZplMctL.jpg'),
+      'ASIN_1501164589' => array('title'=> 'Unshakeable: Your Financial Freedom Playbook','image' => 'https://m.media-amazon.com/images/I/51yjcDMAjEL.jpg')
+    );
+    return $hash;
+  }
+
 }
 ?>

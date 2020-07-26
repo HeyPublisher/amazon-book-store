@@ -63,17 +63,19 @@ define('SGW_PLUGIN_TESTED', '5.3.0');
 define('SGW_PLUGIN_OPTTIONS', '_sgw_plugin_options');
 define('SGW_BASE_URL', get_option('siteurl').'/wp-content/plugins/support-great-writers/');
 define('SGW_DEFAULT_IMAGE', get_option('siteurl').'/wp-content/plugins/support-great-writers/images/not_found.gif');
-define('SGW_POST_META_KEY','SGW_ASIN');
+define('SGW_POST_META_KEY','SGW_ASIN');           // This is the visible meta data key
+define('SGW_POST_ASINDATA_KEY','_sgw_asindata');  // This is the invisible one that is structured hash
 define('SGW_ADMIN_PAGE','amazon_bookstore');
 define('SGW_ADMIN_PAGE_NONCE','sgw-save-options');
 define('SGW_PLUGIN_ERROR_CONTACT','Please contact <a href="mailto:wordpress@heypublisher.com?subject=Amazon%20Bookstore%20Widget">wordpress@heypublisher.com</a> if you have any questions');
-// Modify the defaults to show
-define('SGW_BESTSELLERS','1455570249,144947425X,1501164589,0692859055');
 define('SGW_PLUGIN_FILE',plugin_basename(__FILE__));
 define('SGW_PLUGIN_FULLPATH', dirname(__FILE__));
 
 if (!class_exists("\HeyPublisher\Base\Log")) {
   require_once(SGW_PLUGIN_FULLPATH . '/include/classes/HeyPublisher/Base/Log.class.php');
+}
+if (!class_exists("\AMZNBS\ASIN")) {
+  require_once(SGW_PLUGIN_FULLPATH . '/include/classes/AMZNBS/ASIN.class.php');
 }
 if (!class_exists("\HeyPublisher\Base\Updater")) {
   require_once(SGW_PLUGIN_FULLPATH . '/include/classes/HeyPublisher/Base/Updater.class.php');
@@ -83,36 +85,37 @@ $sgw_updater = new \HeyPublisher\Base\Updater( __FILE__ );
 $sgw_updater->set_repository( 'amazon-book-store' ); // set repo
 $sgw_updater->initialize(SGW_PLUGIN_TESTED); // initialize the updater
 
-require_once(dirname(__FILE__) . '/include/classes/SGW_Widget.class.php');
-require_once(dirname( __FILE__ ) . '/include/classes/AMZNBS/Admin.class.php');
-$sgw = new \AMZNBS\Admin;
+require_once(SGW_PLUGIN_FULLPATH . '/include/classes/SGW_Widget.class.php');
+require_once(SGW_PLUGIN_FULLPATH . '/include/classes/AMZNBS/Admin.class.php');
+$SGW_ADMIN = new \AMZNBS\Admin;
+
 
 // enable link to settings page
-add_filter($sgw->plugin_filter(), array(&$sgw,'plugin_link'), 10, 2 );
+add_filter($SGW_ADMIN->plugin_filter(), array(&$SGW_ADMIN,'plugin_link'), 10, 2 );
 
 function RegisterAdminPage() {
-  global $sgw;
+  global $SGW_ADMIN;
   // ensure our js and style sheet only get loaded on our admin page
-  $page = add_options_page('Amazon Book Store', 'Amazon Book Store', 'manage_options', SGW_ADMIN_PAGE, array(&$sgw,'action_handler'));
-  $sgw->help = $page;
+  $page = add_options_page('Amazon Book Store', 'Amazon Book Store', 'manage_options', SGW_ADMIN_PAGE, array(&$SGW_ADMIN,'action_handler'));
+  $SGW_ADMIN->help = $page;
   add_action("admin_print_scripts-$page", 'AdminInit');
-  add_action("admin_print_styles-$page", array(&$sgw,'admin_stylesheets'));
+  add_action("admin_print_styles-$page", array(&$SGW_ADMIN,'admin_stylesheets'));
 }
 
 function AdminInit() {
-  wp_enqueue_script('sgw', WP_PLUGIN_URL . '/support-great-writers/include/js/sgw.js');
+  wp_enqueue_script('sgw', WP_PLUGIN_URL . '/support-great-writers/include/js/sgw.js',array(),SGW_PLUGIN_VERSION);
 }
 function RegisterWidgetStyle() {
-	wp_enqueue_style( 'sgw_widget', SGW_BASE_URL . 'css/sgw_widget.css', array(), '1.2.2' );
+	wp_enqueue_style( 'sgw_widget', SGW_BASE_URL . 'css/sgw_widget.css', array(), SGW_PLUGIN_VERSION );
 }
 
 if (class_exists("SupportGreatWriters")) {
   add_action('widgets_init', create_function('', 'return register_widget("SupportGreatWriters");'));
   add_action('admin_menu', 'RegisterAdminPage');
 	add_action('wp_enqueue_scripts','RegisterWidgetStyle');
-	add_filter('contextual_help', array(&$sgw,'configuration_screen_help'), 10, 3);
+	add_filter('contextual_help', array(&$SGW_ADMIN,'configuration_screen_help'), 10, 3);
 
 }
-register_activation_hook( __FILE__, array(&$sgw,'activate_plugin'));
-register_deactivation_hook( __FILE__, array(&$sgw,'deactivate_plugin'));
+register_activation_hook( __FILE__, array(&$SGW_ADMIN,'activate_plugin'));
+register_deactivation_hook( __FILE__, array(&$SGW_ADMIN,'deactivate_plugin'));
 ?>

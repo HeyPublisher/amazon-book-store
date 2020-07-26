@@ -2,7 +2,7 @@
 namespace HeyPublisher;
 
 if (!class_exists("\HeyPublisher\Base\Log")) {
-  require_once(SGW_PLUGIN_FULLPATH . '/include/classes/HeyPublisher/Base/Log.class.php');
+  require_once( dirname(__FILE__) . '/Base/Log.class.php');
 }
 
 if(preg_match('#' . basename(__FILE__) . '#', $_SERVER['PHP_SELF'])) { die('HeyPublisher: Illegal Page Call!'); }
@@ -12,7 +12,6 @@ if(preg_match('#' . basename(__FILE__) . '#', $_SERVER['PHP_SELF'])) { die('HeyP
 *
 */
 class Base {
-  var $debug = true;
   var $logger = null;
   var $help = false;
   var $i18n = 'heypublisher';  // key for internationalization stubs
