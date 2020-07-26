@@ -7,12 +7,13 @@ class SupportGreatWriters extends WP_Widget {
   var $seen = array();
   var $options = array();
   var $asins = array();
+  var $asin_meta = array();
   var $logger = null;
 
 	function __construct() {
     global $HEYPUB_LOGGER;
     $this->logger = $HEYPUB_LOGGER;
-    $this->logger->debug("SupportGreatWriters");
+    $this->logger->debug("WP_Widget::SupportGreatWriters loaded");
 		$control_ops = array( 'id_base' => 'sgw' );
 		$widget_ops = array('description' => __('Easily sell Amazon books or other products in sidebar.','sgw'));
 		$this->options = get_option(SGW_PLUGIN_OPTTIONS);
@@ -30,22 +31,34 @@ class SupportGreatWriters extends WP_Widget {
       'fr'      => 'amazon.fr',
       'ca'      => 'amazon.ca',
       'it'      => 'amazon.it',
-      'es'      => 'amazon.es'
+      'es'      => 'amazon.es',
+      'br'      => 'amazon.com.br'
     );
 
     if (!$asin) {
       // display default image
       $link = sprintf('<img src="%s" title="Product ASIN not defined">',SGW_DEFAULT_IMAGE);
     } else {
-      $format = '<a title="Click for more Information" target=_blank href="https://www.%s/gp/product/%s?ie=UTF8&tag=%s&linkCode=as2&camp=1789&creative=9325&creativeASIN=%s"><img class="sgw_product_img" src="http://ecx.images-amazon.com/images/P/%s.01._SCMZZZZZZZ_.jpg"></a><img src="https://www.assoc-%s/e/ir?t=%s&l=as2&o=1&a=%s" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />';
-      $link = sprintf($format,$url_map[$country],$asin,$assoc,$asin,$asin,$url_map[$country],$assoc,$asin);
+      $asin_key = sprintf("ASIN_%s",$asin);
+      if (isset($this->asin_meta[$asin_key]['image'])) {
+        $image = $this->asin_meta[$asin_key]['image']; // secure URL image
+        $title = $this->asin_meta[$asin_key]['title'];
+      } else {
+        $image = sprintf("http://ecx.images-amazon.com/images/P/%s.01._SCMZZZZZZZ_.jpg",$asin); // non-secure URL image
+        $title = "Click for more Information";
+      }
+      // Need to updtae to use this page URL
+      $pageUrl = sprintf("https://www.%s/dp/%s?tag=%s&linkCode=ogi&th=1&psc=1",$url_map[$country],$asin,$assoc);
+
+      $format = '<a title="%s" target="_blank" href="%s"><img class="sgw_product_img" src="%s"></a>';
+      $link = sprintf($format,$title,$pageUrl,$image);
     }
     return $link;
   }
 
   // Split a comma-separated list of asins apart and return an array of POST or DEFAULT asins for display.
   private function shuffle_asin_list($list) {
-    $this->logger->debug(sprintf("\tshuffle_asin_list : \n\t\$list = %s",print_r($list,1)));
+    $this->logger->debug(sprintf("SupportGreatWriters#shuffle_asin_list()\n\t\$list = %s",print_r($list,1)));
     $asins = array();
     if ($list) {
   	  $array = explode(',',$list);
@@ -57,16 +70,43 @@ class SupportGreatWriters extends WP_Widget {
   // load the ASINs into memory in way that makes it easy to pop them off later
   public function load_asins() {
 	  global $post; // this is only available within the widget function, not within the constructor
+    global $SGW_ADMIN; // need reference to the admin class handler for fetching asin meta
+    $this->logger->debug("SupportGreatWriters#load_asins()");
     $list = '';
+    $meta_hash = array();
     if (!is_home()) {
+      $this->logger->debug(sprintf("\t\$post->ID : %s",$post->ID));
       // look to see if we have a post id meta attribute
   	  $list = get_post_meta($post->ID,SGW_POST_META_KEY,true);
+      $post_meta = get_post_meta($post->ID,SGW_POST_ASINDATA_KEY,true);
+      $this->logger->debug(sprintf("\t\$post_meta = %s",print_r($post_meta,1)));
+
   	  $this->asins = array_merge($this->asins,$this->shuffle_asin_list($list));
+
+      // Just-In time updates of existing ASIN lists
+      // $post_meta may not be fully populated or may not be an array
+      if (!is_array($post_meta)) {
+        $this->asin_meta = $SGW_ADMIN->ensure_meta_for_asins($list,array());
+        $ret = update_post_meta($post->ID,SGW_POST_ASINDATA_KEY,$this->asin_meta);
+        $this->logger->debug(sprintf("\t\$post_meta is NOT array : return : %s ",$ret));
+      } else {
+        $key_test = $SGW_ADMIN->normalize_meta_keys($post_meta);
+        if (count(array_diff($this->asins,$key_test)) > 0) {
+          $this->asin_meta = $SGW_ADMIN->ensure_meta_for_asins($list,$post_meta);
+          $ret = update_post_meta($post->ID,SGW_POST_ASINDATA_KEY,$this->asin_meta);
+          $this->logger->debug(sprintf("\t\$post_meta was NOT same as \$list : return : %s ",$ret));
+        } else {
+          $this->logger->debug("\t\$post_meta was OK ");
+          $this->asin_meta = $post_meta;
+        }
+      }
     }
     // concatenate the defaults onto the end
     $this->asins = array_merge($this->asins,$this->shuffle_asin_list($this->options['default']));
-    // need to uniquify the array to prevent duplicates
-    $this->asins = array_unique($this->asins);
+    if (is_array($this->options['default_meta'])) {
+      // This would only NOT be an array if an update since 3.0.0 has not been made
+      $this->asin_meta = $this->asin_meta + $this->options['default_meta'];
+    }
   }
   // Get the next ASINs for display
   public function get_next_asin_set($count) {
@@ -74,6 +114,7 @@ class SupportGreatWriters extends WP_Widget {
     $diff = array_diff($this->asins,$this->seen);
     if (count($diff) >= $count) {
       for ($i = 0; $i < $count; $i++) {
+        // pulling the asins off the front
         $next = array_shift($diff);
         $asins[] = $next;
         $this->seen[] = $next;
