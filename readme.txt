@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: affiliate, amazon, product, book store, affiliate sales,ASIN, Amazon Associate, monetize, heypublisher
 Requires at least: 4.0
 Tested up to: 5.3.0
-Stable tag: 3.0.0
+Stable tag: 3.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -49,6 +49,13 @@ If you wish to make a donation, please consider donating instead to the [Literar
 4. ASIN configuration for POSTs and for Default pool
 
 == Changelog ==
+
+= 3.1.0 =
+* Released: 2020-07-25
+* [[#18](https://github.com/HeyPublisher/amazon-book-store/issues/18)] : Amazon Brazil is now supported
+* [[#16](https://github.com/HeyPublisher/amazon-book-store/issues/16)] : Removed unneeded constant
+* [[#14](https://github.com/HeyPublisher/amazon-book-store/issues/14)] : ASIN information, when not cached locally, is not fetched from HeyPublisher.com, which wraps the Amazon PAAPI, eliminating the need for users of this plugin to have their own API key and secret.
+* Fixed additional minor code inconsistencies.
 
 = 3.0.0 =
 * Released: 2020-07-03

@@ -1,5 +1,12 @@
 ### Changelog
 
+#### 3.1.0
+* Released: 2020-07-25
+* [[#18](https://github.com/HeyPublisher/amazon-book-store/issues/18)] : Amazon Brazil is now supported
+* [[#16](https://github.com/HeyPublisher/amazon-book-store/issues/16)] : Removed unneeded constant
+* [[#14](https://github.com/HeyPublisher/amazon-book-store/issues/14)] : ASIN information, when not cached locally, is not fetched from HeyPublisher.com, which wraps the Amazon PAAPI, eliminating the need for users of this plugin to have their own API key and secret.
+* Fixed additional minor code inconsistencies.
+
 #### 3.0.0
 * Released: 2020-07-03
 * Plugin is now hosted on [GitHub](https://github.com/HeyPublisher/amazon-book-store)
