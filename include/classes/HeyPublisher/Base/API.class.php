@@ -1,5 +1,6 @@
 <?php
 namespace HeyPublisher\Base;
+global $HEYPUB_API;
 
 if (!class_exists("\HeyPublisher\Base\Log")) {
   require_once( dirname(__FILE__) . '/Log.class.php');

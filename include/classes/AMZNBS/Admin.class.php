@@ -307,6 +307,7 @@ class Admin extends \HeyPublisher\Base {
   // need to strip off the prefix `ASIN_`
   public function normalize_meta_keys($hash){
     $this->logger->debug("Admin#normalize_meta_keys()");
+    $this->logger->debug(sprintf("\t\$hash %s",print_r($hash,1)));
     $keys = array_keys($hash);
     $set = str_replace("ASIN_","",$keys);
     $this->logger->debug(sprintf("\t\$keys %s",print_r($keys,1)));
@@ -340,6 +341,8 @@ class Admin extends \HeyPublisher\Base {
   }
 
   private function update_default_asins($defaults){
+    $this->logger->debug("ADMIN#update_default_asins()");
+    $this->logger->debug(sprintf("\t\$defaults = %s",print_r($defaults,1)));
     // update the default asins, if present
     if ($test = $this->normalize_asin_list($defaults)) {
       $this->options['default']       = $test;
@@ -348,6 +351,8 @@ class Admin extends \HeyPublisher\Base {
       $this->options['default']       = $this->initialize_default_asins();
       $this->options['default_meta']  = $this->initialize_default_asin_meta();
     }
+    $this->logger->debug(sprintf("\t\$options['default'] = %s",print_r($this->options['default'],1)));
+    $this->logger->debug(sprintf("\t\$options['default_meta'] = %s",print_r($this->options['default_meta'],1)));
     update_option(SGW_PLUGIN_OPTTIONS,$this->options);
     return true;
   }
@@ -520,7 +525,9 @@ EOF;
   // Get the default asins in a comma-separated list
   private function initialize_default_asins() {
     $hash = $this->initialize_default_asin_meta();
-    $list = join(',',array_keys($hash));
+    // TODO: consolidate calls to normalize_meta_keys()
+    $prep = $this->normalize_meta_keys($hash);
+    $list = join(',',$prep);
     $this->logger->debug(sprintf("\tinitialize_default_asins()\t\$list = %s",$list));
     return $list;
   }

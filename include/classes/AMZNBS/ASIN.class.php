@@ -28,6 +28,7 @@ class ASIN {
     $result = $this->api->get($path);
     if ($result && key_exists('object',$result) && $result['object'] == 'list' ) {
       foreach ($result['data'] as $hash) {
+        // TODO: Normalize the transposition of the ASIN
         $asin = sprintf("ASIN_%s",$hash['id']);
         $data[$asin] = array(
           'title' => $hash['title'],
