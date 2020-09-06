@@ -2,9 +2,9 @@
 Contributors: heypublisher, aguywithanidea, loudlever
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Y8SL68GN5J2PL
 Tags: affiliate, amazon, product, book store, affiliate sales,ASIN, Amazon Associate, monetize, heypublisher
-Requires at least: 4.0
-Tested up to: 5.3.0
-Stable tag: 3.1.0
+Requires at least: 5.0
+Tested up to: 5.5.0
+Stable tag: 3.1.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -49,6 +49,11 @@ If you wish to make a donation, please consider donating instead to the [Literar
 4. ASIN configuration for POSTs and for Default pool
 
 == Changelog ==
+
+= 3.1.0 =
+* Released: 2020-09*05
+* [[#21](https://github.com/HeyPublisher/amazon-book-store/issues/21)] : Fixed bug when resetting default ASINs by clearing the field and saving.
+* Updated the README to better explain how to install directly from GitHub.
 
 = 3.1.0 =
 * Released: 2020-07-25

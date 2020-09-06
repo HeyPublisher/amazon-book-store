@@ -1,5 +1,10 @@
 ### Changelog
 
+#### 3.1.1
+* Released: 2020-09*05
+* [[#21](https://github.com/HeyPublisher/amazon-book-store/issues/21)] : Fixed bug when resetting default ASINs by clearing the field and saving.
+* Updated the README to better explain how to install directly from GitHub.
+
 #### 3.1.0
 * Released: 2020-07-25
 * [[#18](https://github.com/HeyPublisher/amazon-book-store/issues/18)] : Amazon Brazil is now supported
