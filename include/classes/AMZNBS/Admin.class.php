@@ -520,7 +520,9 @@ EOF;
   // Get the default asins in a comma-separated list
   private function initialize_default_asins() {
     $hash = $this->initialize_default_asin_meta();
-    $list = join(',',array_keys($hash));
+    // TODO: consolidate calls to normalize_meta_keys()
+    $prep = $this->normalize_meta_keys($hash);
+    $list = join(',',$prep);
     $this->logger->debug(sprintf("\tinitialize_default_asins()\t\$list = %s",$list));
     return $list;
   }

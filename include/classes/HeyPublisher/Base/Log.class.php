@@ -4,6 +4,7 @@
 // Then send logs: $this->logger->debug("message"); and it will be written to 'file.log'
 
 namespace HeyPublisher\Base;
+global $HEYPUB_LOGGER;
 
 if(preg_match('#' . basename(__FILE__) . '#', $_SERVER['PHP_SELF'])) { die('HeyPublisher: Illegal Page Call!'); }
 
