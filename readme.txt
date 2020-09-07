@@ -50,8 +50,8 @@ If you wish to make a donation, please consider donating instead to the [Literar
 
 == Changelog ==
 
-= 3.1.0 =
-* Released: 2020-09*05
+= 3.1.1 =
+* Released: 2020-09-05
 * [[#21](https://github.com/HeyPublisher/amazon-book-store/issues/21)] : Fixed bug when resetting default ASINs by clearing the field and saving.
 * Updated the README to better explain how to install directly from GitHub.
 
